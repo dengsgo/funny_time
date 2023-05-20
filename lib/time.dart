@@ -27,6 +27,7 @@ class _TimePageState extends State<TimePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
+      appBar: AppBar(backgroundColor: Colors.black,),
       body: PositionView(tapCallback: tapTimeViewHandler,),
       bottomNavigationBar: _showBottomNavigationBar ? BottomAppBar(
         child: Row(
@@ -81,11 +82,11 @@ class _PositionViewState extends PositionViewState<PositionView> {
         Container(
           margin: positionMargin,
           decoration: BoxDecoration(
-              border: globalSetting.isTimeShowBorder ? Border.all(
-                  width: 0,
-                  color: Colors.white,
-              ) : null,
-              borderRadius: BorderRadius.circular(globalSetting.timeBorderRadiusValue),
+            border: globalSetting.isTimeShowBorder ? Border.all(
+              width: 0,
+              color: Colors.white,
+            ) : null,
+            borderRadius: BorderRadius.circular(globalSetting.timeBorderRadiusValue),
           ),
           child: InkWell(
             onTap: widget.tapCallback,
