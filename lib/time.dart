@@ -38,6 +38,9 @@ class _TimePageState extends State<TimePage> {
             IconButton(onPressed: (){
               globalSetting.displayStyle = DisplayStyle.time;
             }, icon: Icon(Icons.settings)),
+            IconButton(onPressed: (){
+              globalSetting.isTimeShowBorder = !globalSetting.isTimeShowBorder;
+            }, icon: Icon(Icons.light)),
           ],
         ),
       ) : null,
