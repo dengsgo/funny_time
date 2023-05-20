@@ -70,7 +70,9 @@ class PositionViewState<T extends StatefulWidget> extends State<T> {
 
     timerPeriodicCallback = () {
       _screenSize = MediaQuery.sizeOf(context);
-      _screenSize = Size(_screenSize.width, _screenSize.height - 56);
+      if (MediaQuery.orientationOf(context) == Orientation.portrait) {
+        _screenSize = Size(_screenSize.width, _screenSize.height - 56);
+      }
       var xStep = Random.secure().nextInt(globalSetting.stepRandomMaxValue);
       var yStep = Random.secure().nextInt(globalSetting.stepRandomMaxValue);
       double left = positionMargin.left;
@@ -103,7 +105,7 @@ class PositionViewState<T extends StatefulWidget> extends State<T> {
         if (yStep + top + widgetSize.height < _screenSize.height) {
           top += yStep;
         } else {
-          top = _screenSize.height - widgetSize.height;
+          top = _screenSize.height - widgetSize.height - 56;
           _yOffsetReverse = true;
         }
       }
