@@ -69,6 +69,8 @@ class PositionViewState<T extends StatefulWidget> extends State<T> {
     }
 
     timerPeriodicCallback = () {
+      final RenderObject? renderBox = timeViewKey.currentContext?.findRenderObject();
+      _timeviewSize = renderBox?.paintBounds.size;
       _screenSize = MediaQuery.sizeOf(context);
       if (MediaQuery.orientationOf(context) == Orientation.portrait) {
         _screenSize = Size(_screenSize.width, _screenSize.height - 56);

@@ -42,6 +42,12 @@ class _TimePageState extends State<TimePage> {
             IconButton(onPressed: (){
               globalSetting.isTimeShowBorder = !globalSetting.isTimeShowBorder;
             }, icon: Icon(Icons.light)),
+            IconButton(onPressed: (){
+              globalSetting.timeFontSizeScale += 0.1;
+            }, icon: Icon(Icons.add)),
+            IconButton(onPressed: (){
+              globalSetting.timeFontSizeScale -= 0.1;
+            }, icon: Icon(Icons.exposure_minus_1)),
           ],
         ),
       ) : null,
@@ -206,6 +212,7 @@ class _TimeStyleRender extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final style = Theme.of(context).textTheme.displayLarge;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Row(
@@ -214,7 +221,9 @@ class _TimeStyleRender extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           _NumberComponent(number: datetime.hour),
-          Text(":" ,style: Theme.of(context).textTheme.displayLarge,),
+          Text(":" ,style: style?.copyWith(
+            fontSize: (style?.fontSize??1) * globalSetting.timeFontSizeScale,
+          ),),
           _NumberComponent(number: datetime.minute),
           Container(width: 8, height: 0,),
           _SecondIncludeTextComponent(
@@ -236,8 +245,12 @@ class _NumberComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String show = number > 9 ? "$number" : "0$number";
+    final style = Theme.of(context).textTheme.displayLarge;
     return Text(show,
-      style: Theme.of(context).textTheme.displayLarge,);
+      style: style?.copyWith(
+        fontFamily: "JetBrainsMono",
+        fontSize: (style?.fontSize??1) * globalSetting.timeFontSizeScale,
+      ),);
   }
 
 }
@@ -251,8 +264,13 @@ class _SecondComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String show = number > 9 ? "$number" : "0$number";
+    final style = Theme.of(context).textTheme.headlineLarge;
     return Text(show,
-      style: Theme.of(context).textTheme.displaySmall?.copyWith(color: globalSetting.timeSecondColor),);
+      style: style?.copyWith(
+        color: globalSetting.timeSecondColor,
+        fontFamily: "JetBrainsMono",
+        fontSize: (style?.fontSize??1) * globalSetting.timeFontSizeScale,
+      ),);
   }
 
 }

@@ -17,6 +17,7 @@ class SettingConfigure {
     this.isTimeShowBorder = true,
     this.timeBorderRadiusValue = 8,
     this.displayStyle = DisplayStyle.time,
+    this.timeFontSizeScale = 2,
 });
 
   // 当前的样式
@@ -30,6 +31,7 @@ class SettingConfigure {
   Color? timeSecondColor;
   bool isTimeShowBorder;
   double timeBorderRadiusValue;
+  double timeFontSizeScale;
 
   // 星期文字对应表
   Map<int, String> weekdayMapping = {
