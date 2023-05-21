@@ -102,7 +102,7 @@ class SettingConfigure {
   };
 
   // 渐变颜色表
-  List<List<Color>> get paintColorsMap => [
+  List<List<Color>> get paintLinearColorsMap => [
     [], // 0 default = null
     [
       Colors.blue,
@@ -116,15 +116,33 @@ class SettingConfigure {
       Colors.blue,
       Colors.green,
     ],
+    [
+      Colors.deepPurpleAccent,
+      Colors.blue,
+      Colors.lightBlue,
+      Colors.green,
+      Colors.yellow,
+      Colors.orange,
+      Colors.red,
+    ],
+    [
+      Colors.orange,
+      Colors.redAccent,
+      Colors.red,
+      Colors.lightBlue,
+      Colors.deepPurpleAccent,
+      Colors.orange,
+      Colors.green,
+    ],
   ];
 
   Paint? timeTextPaint(int index) {
     if (globalSetting.textColorsPaintIndex == 0
-        || index >= globalSetting.paintColorsMap.length) {
+        || index >= globalSetting.paintLinearColorsMap.length) {
       return null;
     }
     return Paint()..shader = LinearGradient(
-        colors: globalSetting.paintColorsMap[index]
+        colors: globalSetting.paintLinearColorsMap[index]
     ).createShader(Rect.fromLTRB(
       0, 0,
       globalSetting.sharedScreenSize?.width??400,

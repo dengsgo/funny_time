@@ -56,7 +56,7 @@ class _TimePageState extends State<TimePage> {
             }, icon: Icon(Icons.font_download_outlined), tooltip: "换字体",),
             IconButton(onPressed: (){
               int index = globalSetting.textColorsPaintIndex;
-              if (++index >= globalSetting.paintColorsMap.length) {
+              if (++index >= globalSetting.paintLinearColorsMap.length) {
                 index = 0;
               }
               globalSetting.textColorsPaintIndex = index;
