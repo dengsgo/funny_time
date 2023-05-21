@@ -9,6 +9,27 @@ enum DisplayStyle {
   datetime,
 }
 
+enum NumberFontFamily {
+  jetBrainsMono("JetBrainsMono"),
+  digital7("digital7"),
+  arturito("Arturito"),
+  babyground("babyground"),
+  boisu("Boisu"),
+  zystoo("zystoo"),
+  compagnon("Compagnon"),
+  cute("Cute"),
+  facon("Facon"),
+  fulbo("Fulbo"),
+  gap("Gap"),
+  kalmansk("Kalmansk"),
+  pixopedia("pixopedia"),
+  quirky("Quirky"),
+  versa("Versa"),
+  ;
+  const NumberFontFamily(this.name);
+  final String name;
+}
+
 class SettingConfigure {
   SettingConfigure({
     this.isViewMotionOpen = true,
@@ -18,6 +39,7 @@ class SettingConfigure {
     this.timeBorderRadiusValue = 8,
     this.displayStyle = DisplayStyle.time,
     this.timeFontSizeScale = 2,
+    this.fontFamily = NumberFontFamily.jetBrainsMono,
 });
 
   // 当前的样式
@@ -28,6 +50,7 @@ class SettingConfigure {
   int stepRandomMaxValue;
 
   // 时间显示设置
+  NumberFontFamily fontFamily;
   Color? timeSecondColor;
   bool isTimeShowBorder;
   double timeBorderRadiusValue;

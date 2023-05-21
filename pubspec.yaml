@@ -62,6 +62,48 @@ flutter:
     - family: JetBrainsMono
       fonts:
         - asset: fonts/JetBrainsMono-Regular-2.ttf
+    - family: digital7
+      fonts:
+        - asset: fonts/digital7-mono-3.ttf
+    - family: Arturito
+      fonts:
+        - asset: fonts/Arturito-Slab-2.ttf
+    - family: babyground
+      fonts:
+        - asset: fonts/babyground.ttf
+    - family: Boisu
+      fonts:
+        - asset: fonts/Boisu-Stroke-2.otf
+    - family: zystoo
+      fonts:
+        - asset: fonts/branch-zystoo-Regular-2.otf
+    - family: Compagnon
+      fonts:
+        - asset: fonts/Compagnon-Roman-2.otf
+    - family: Cute
+      fonts:
+        - asset: fonts/Cute-Aurora-2.ttf
+    - family: Facon
+      fonts:
+        - asset: fonts/Facon-2.ttf
+    - family: Fulbo
+      fonts:
+        - asset: fonts/Fulbo-Retro-2.otf
+    - family: Gap
+      fonts:
+        - asset: fonts/Gap-Regular-3.ttf
+    - family: Kalmansk
+      fonts:
+        - asset: fonts/Kalmansk-2.otf
+    - family: pixopedia
+      fonts:
+        - asset: fonts/pixopedia-2.ttf
+    - family: Quirky
+      fonts:
+        - asset: fonts/Quirky-Black-2.otf
+    - family: Versa
+      fonts:
+        - asset: fonts/Versa-Versa-2.otf
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -43,6 +43,13 @@ class _TimePageState extends State<TimePage> {
               globalSetting.isTimeShowBorder = !globalSetting.isTimeShowBorder;
             }, icon: Icon(Icons.light)),
             IconButton(onPressed: (){
+              int index = globalSetting.fontFamily.index;
+              if (++index >= NumberFontFamily.values.length) {
+                index = 0;
+              }
+              globalSetting.fontFamily = NumberFontFamily.values[index];
+            }, icon: Icon(Icons.font_download_outlined)),
+            IconButton(onPressed: (){
               globalSetting.timeFontSizeScale += 0.1;
             }, icon: Icon(Icons.add)),
             IconButton(onPressed: (){
@@ -142,21 +149,27 @@ class _DateTimeViewState extends State<DateTimeView> {
 
   @override
   Widget build(BuildContext context) {
+    final style = Theme.of(context).textTheme.bodyMedium;
     final DateTime datetime = DateTime.now();
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+    return IntrinsicWidth(
+      // padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           _TimeStyleRender(datetime: datetime,),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("${datetime.month}-${datetime.day} / ${datetime.year}"),
-              Text("    "),
-              Text(globalSetting.weekdayMapping[datetime.weekday]??""),
-            ],
+          Container(
+            padding: EdgeInsets.only(left: 12, right: 12, bottom: 8),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("${datetime.month}-${datetime.day} / ${datetime.year}", style: style?.copyWith(
+                    fontFamily: globalSetting.fontFamily.name
+                ),),
+                Expanded(child: Text("")),
+                Text(globalSetting.weekdayMapping[datetime.weekday]??""),
+              ],
+            ),
           )
         ],
       ),
@@ -216,12 +229,14 @@ class _TimeStyleRender extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        // mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
+        textBaseline: TextBaseline.alphabetic,
         children: [
           _NumberComponent(number: datetime.hour),
           Text(":" ,style: style?.copyWith(
+            fontFamily: globalSetting.fontFamily.name,
             fontSize: (style?.fontSize??1) * globalSetting.timeFontSizeScale,
           ),),
           _NumberComponent(number: datetime.minute),
@@ -248,7 +263,7 @@ class _NumberComponent extends StatelessWidget {
     final style = Theme.of(context).textTheme.displayLarge;
     return Text(show,
       style: style?.copyWith(
-        fontFamily: "JetBrainsMono",
+        fontFamily: globalSetting.fontFamily.name,
         fontSize: (style?.fontSize??1) * globalSetting.timeFontSizeScale,
       ),);
   }
@@ -268,7 +283,7 @@ class _SecondComponent extends StatelessWidget {
     return Text(show,
       style: style?.copyWith(
         color: globalSetting.timeSecondColor,
-        fontFamily: "JetBrainsMono",
+        fontFamily: globalSetting.fontFamily.name,
         fontSize: (style?.fontSize??1) * globalSetting.timeFontSizeScale,
       ),);
   }

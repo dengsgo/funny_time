@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:funny_time/time.dart';
 import 'package:funny_time/color_schemes.g.dart';
 
 void main() {
   runApp(const MyApp());
+  SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.immersive,
+      overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]
+  );
+  SystemChrome.setApplicationSwitcherDescription(
+      const ApplicationSwitcherDescription(
+        label: "Funny Time, Good Time!",
+      )
+  );
+  SystemChrome.setSystemUIChangeCallback((systemOverlaysAreVisible) {
+    print("systemOverlaysAreVisible $systemOverlaysAreVisible");
+    return Future(() {});
+  });
 }
 
 class MyApp extends StatelessWidget {
