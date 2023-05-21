@@ -19,10 +19,16 @@ class PositionViewState<T extends StatefulWidget> extends State<T> {
       print("renderBox ${renderBox?.paintBounds.size}");
       _timeviewSize = renderBox?.paintBounds.size;
       _screenSize = MediaQuery.of(context).size;
-      print("renderBox ${MediaQuery.of(context).size}");
+      globalSetting.sharedScreenSize = _screenSize;
+      print("_screenSize ${MediaQuery.of(context).size}");
       _centerWidget();
       _motionWidget();
     });
+  }
+
+  double _kRealActiveZoneHeight(Size size) {
+    int kAppbarHeight = MediaQuery.orientationOf(context) == Orientation.portrait ? 56 : 0;
+    return size.height - kAppbarHeight;
   }
 
   _centerWidget() {
@@ -41,7 +47,7 @@ class PositionViewState<T extends StatefulWidget> extends State<T> {
       return;
     }
     double left = (_screenSize.width - widgetSize.width) / 2;
-    double top = (_screenSize.height - widgetSize.height - 56) / 2;
+    double top = (_kRealActiveZoneHeight(_screenSize) - widgetSize.height) / 2;
     positionMargin = EdgeInsets.only(left: left, top: top);
     // 随机 x y 方向
     _xOffsetReverse = Random.secure().nextBool();
@@ -71,6 +77,7 @@ class PositionViewState<T extends StatefulWidget> extends State<T> {
     timerPeriodicCallback = () {
       final RenderObject? renderBox = timeViewKey.currentContext?.findRenderObject();
       _timeviewSize = renderBox?.paintBounds.size;
+      widgetSize = _timeviewSize!;
       _screenSize = MediaQuery.sizeOf(context);
       globalSetting.sharedScreenSize = _screenSize; // 贡献给 global
       if (MediaQuery.orientationOf(context) == Orientation.portrait) {
@@ -108,7 +115,7 @@ class PositionViewState<T extends StatefulWidget> extends State<T> {
         if (yStep + top + widgetSize.height < _screenSize.height) {
           top += yStep;
         } else {
-          top = _screenSize.height - widgetSize.height - 56;
+          top = _screenSize.height - widgetSize.height;
           _yOffsetReverse = true;
         }
       }
