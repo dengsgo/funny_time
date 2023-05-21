@@ -87,7 +87,7 @@ class PositionView extends StatefulWidget {
 
 }
 
-class _PositionViewState extends PositionViewState<PositionView> {
+class _PositionViewState extends PositionViewState<PositionView> with AutomaticKeepAliveClientMixin {
 
   @override
   void initState() {
@@ -102,6 +102,7 @@ class _PositionViewState extends PositionViewState<PositionView> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final StatefulWidget view;
     switch (globalSetting.displayStyle) {
       case DisplayStyle.time:
@@ -128,6 +129,9 @@ class _PositionViewState extends PositionViewState<PositionView> {
       ],
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 
 }
 
