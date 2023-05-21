@@ -41,7 +41,7 @@ class SettingConfigure {
     this.timeFontSizeScale = 1.5,
     this.fontFamily = NumberFontFamily.jetBrainsMono,
     this.sharedScreenSize,
-    this.textColorsPaintIndex = 0,
+    this.textColorsPaintIndex = 3,
 });
 
   // 当前的样式
