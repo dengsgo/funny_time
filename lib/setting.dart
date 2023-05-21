@@ -38,8 +38,10 @@ class SettingConfigure {
     this.isTimeShowBorder = true,
     this.timeBorderRadiusValue = 8,
     this.displayStyle = DisplayStyle.time,
-    this.timeFontSizeScale = 2,
+    this.timeFontSizeScale = 1.5,
     this.fontFamily = NumberFontFamily.jetBrainsMono,
+    this.sharedScreenSize,
+    this.textColorsPaintIndex = 0,
 });
 
   // 当前的样式
@@ -55,9 +57,13 @@ class SettingConfigure {
   bool isTimeShowBorder;
   double timeBorderRadiusValue;
   double timeFontSizeScale;
+  int textColorsPaintIndex;
+
+  // 屏幕尺寸共享
+  Size? sharedScreenSize;
 
   // 星期文字对应表
-  Map<int, String> weekdayMapping = {
+  Map<int, String> get weekdayMapping => {
     1: "星期一",
     2: "星期二",
     3: "星期三",
@@ -68,7 +74,7 @@ class SettingConfigure {
   };
 
   // 小时文字对应表
-  Map<int, String> hourMapping = {
+  Map<int, String> get hourMapping => {
     23: "深夜",
     0: "深夜",
     1: "深夜",
@@ -94,6 +100,36 @@ class SettingConfigure {
     21: "入夜",
     22: "入夜",
   };
+
+  // 渐变颜色表
+  List<List<Color>> get paintColorsMap => [
+    [], // 0 default = null
+    [
+      Colors.blue,
+      Colors.green,
+      Colors.deepPurpleAccent,
+      Colors.purpleAccent
+    ],
+    [
+      Colors.deepPurpleAccent,
+      Colors.purpleAccent,
+      Colors.blue,
+      Colors.green,
+    ],
+  ];
+
+  Paint? timeTextPaint(int index) {
+    if (globalSetting.textColorsPaintIndex == 0
+        || index >= globalSetting.paintColorsMap.length) {
+      return null;
+    }
+    return Paint()..shader = LinearGradient(
+        colors: globalSetting.paintColorsMap[index]
+    ).createShader(Rect.fromLTRB(
+      0, 0,
+      globalSetting.sharedScreenSize?.width??400,
+      globalSetting.sharedScreenSize?.height??0,));
+  }
 }
 
 class SettingManager {

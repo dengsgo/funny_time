@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:math';
+import 'dart:ui' show Gradient;
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Gradient;
 import 'package:funny_time/setting.dart';
 import 'package:funny_time/minix.dart';
 
@@ -34,27 +35,41 @@ class _TimePageState extends State<TimePage> {
         child: Row(
           children: [
             IconButton(onPressed: (){
-              globalSetting.displayStyle = DisplayStyle.datetime;
-            }, icon: const Icon(Icons.refresh)),
-            IconButton(onPressed: (){
-              globalSetting.displayStyle = DisplayStyle.time;
-            }, icon: Icon(Icons.settings)),
+              int index = globalSetting.displayStyle.index;
+              if (++index >= DisplayStyle.values.length) {
+                index = 0;
+              }
+              globalSetting.displayStyle = DisplayStyle.values[index];
+              setState(() {});
+            }, icon: const Icon(Icons.style_outlined), tooltip: "样式",),
             IconButton(onPressed: (){
               globalSetting.isTimeShowBorder = !globalSetting.isTimeShowBorder;
-            }, icon: Icon(Icons.light)),
-            IconButton(onPressed: (){
+              setState(() {});
+            }, icon: Icon(Icons.border_all), tooltip: "显隐边框",),
+            IconButton(onPressed: () {
               int index = globalSetting.fontFamily.index;
               if (++index >= NumberFontFamily.values.length) {
                 index = 0;
               }
               globalSetting.fontFamily = NumberFontFamily.values[index];
-            }, icon: Icon(Icons.font_download_outlined)),
+              setState(() {});
+            }, icon: Icon(Icons.font_download_outlined), tooltip: "换字体",),
+            IconButton(onPressed: (){
+              int index = globalSetting.textColorsPaintIndex;
+              if (++index >= globalSetting.paintColorsMap.length) {
+                index = 0;
+              }
+              globalSetting.textColorsPaintIndex = index;
+              setState(() {});
+            }, icon: Icon(Icons.color_lens_outlined), tooltip: "换渐变色",),
             IconButton(onPressed: (){
               globalSetting.timeFontSizeScale += 0.1;
-            }, icon: Icon(Icons.add)),
+              setState(() {});
+            }, icon: Icon(Icons.plus_one), tooltip: "增大显示",),
             IconButton(onPressed: (){
               globalSetting.timeFontSizeScale -= 0.1;
-            }, icon: Icon(Icons.exposure_minus_1)),
+              setState(() {});
+            }, icon: Icon(Icons.exposure_minus_1), tooltip: "减小显示",),
           ],
         ),
       ) : null,
@@ -238,6 +253,7 @@ class _TimeStyleRender extends StatelessWidget {
           Text(":" ,style: style?.copyWith(
             fontFamily: globalSetting.fontFamily.name,
             fontSize: (style?.fontSize??1) * globalSetting.timeFontSizeScale,
+            foreground: globalSetting.timeTextPaint(globalSetting.textColorsPaintIndex),
           ),),
           _NumberComponent(number: datetime.minute),
           Container(width: 8, height: 0,),
@@ -265,10 +281,13 @@ class _NumberComponent extends StatelessWidget {
       style: style?.copyWith(
         fontFamily: globalSetting.fontFamily.name,
         fontSize: (style?.fontSize??1) * globalSetting.timeFontSizeScale,
+          foreground: globalSetting.timeTextPaint(globalSetting.textColorsPaintIndex),
       ),);
   }
 
 }
+
+
 
 class _SecondComponent extends StatelessWidget {
   const _SecondComponent({super.key,
