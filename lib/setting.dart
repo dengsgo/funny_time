@@ -38,7 +38,7 @@ class SettingConfigure {
     this.isTimeShowBorder = true,
     this.timeBorderRadiusValue = 8,
     this.displayStyle = DisplayStyle.time,
-    this.timeFontSizeScale = 1.5,
+    this.timeFontSizeScale = 1.2,
     this.fontFamily = NumberFontFamily.jetBrainsMono,
     this.sharedScreenSize,
     this.textColorsPaintIndex = 3,
