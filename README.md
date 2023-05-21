@@ -40,7 +40,7 @@ flutter run
 ## Issue 
 
 项目为自用软件开源，目前仅满足自己的需求。如果你使用中发现 Bug 或者有好的改进建议,
-[欢迎提出 Issue](https://github.com/dengsgo/funny_time/issue) . 
+[欢迎提出 Issue](https://github.com/dengsgo/funny_time/issues) . 
 
 ## Donation
 
