@@ -1,6 +1,6 @@
 # Funny Time App
 
-一个全屏显示的时间软件，类似于 always on display (AOD, 永久显示) 的效果。
+一个全屏显示的时间软件，类似于 always on display (AOD, 持久显示) 的效果。
 
 非常适合 OLED、Amoled 屏幕常亮使用。
 
