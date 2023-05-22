@@ -28,9 +28,18 @@ jobs:
       - run: flutter config --enable-macos-desktop
       - run: flutter doctor -v
 
-      # Checkout gallery code and get packages.
-      - name: Checkout gallery code
+      # Checkout repo code and get packages.
+      - name: Checkout funny_time code
         uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
       - run: flutter pub get
 
       - run: flutter build ${{ matrix.target }}
+      
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          # Artifact name
+          name: app-debug.apk # optional, default is artifact
+          # A file, directory or wildcard pattern that describes what to upload
+          path: build/app/outputs/flutter-apk/
+      
