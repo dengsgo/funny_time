@@ -41,5 +41,12 @@ jobs:
           # Artifact name
           name: app-debug.apk # optional, default is artifact
           # A file, directory or wildcard pattern that describes what to upload
-          path: build/**
+          path: |
+            build/**.apk
+            build/**.aab
+            build/**.app
+            build/**.ipa
+            build/**.dmg
+            build/**.js
+            
       
