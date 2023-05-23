@@ -38,15 +38,26 @@ jobs:
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.2
         with:
+          if: ${{ matrix.target == 'apk --debug' }}
           # Artifact name
-          name: app-debug.apk # optional, default is artifact
+          name: androidAPK # optional, default is artifact
           # A file, directory or wildcard pattern that describes what to upload
-          path: |
-            build/**.apk
-            build/**.aab
-            build/**.app
-            build/**.ipa
-            build/**.dmg
-            build/**.js
+          path: build/app/outputs/flutter-apk/app-debug.apk
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          if: ${{ matrix.target == 'appbundle --debug' }}
+          # Artifact name
+          name: appbundle # optional, default is artifact
+          # A file, directory or wildcard pattern that describes what to upload
+          path: build/app/outputs/bundle/debug/app-debug.aab
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          if: ${{ matrix.target == 'ios --no-codesign' }}
+          # Artifact name
+          name: appbundle # optional, default is artifact
+          # A file, directory or wildcard pattern that describes what to upload
+          path: build/ios/iphoneos/Runner.app
             
       
