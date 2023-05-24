@@ -44,7 +44,7 @@ jobs:
           # A file, directory or wildcard pattern that describes what to upload
           path: |
             build/app/outputs/flutter-apk/app-debug.apk
-            build/ios/iphoneos/Runner.app
+            ## build/ios/iphoneos/Runner.app
 
             
       
