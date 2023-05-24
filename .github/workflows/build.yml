@@ -42,9 +42,8 @@ jobs:
           # Artifact name
           name: buildOut # optional, default is artifact
           # A file, directory or wildcard pattern that describes what to upload
-          path: |
-            build/app/outputs/flutter-apk/app-debug.apk
-            ## build/ios/iphoneos/Runner.app
+          path: build/app/outputs/flutter-apk/app-debug.apk
+          ## build/ios/iphoneos/Runner.app  
 
             
       
