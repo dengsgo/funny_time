@@ -30,7 +30,8 @@ class _TimePageState extends State<TimePage> {
       backgroundColor: Colors.black,
       body: PositionView(tapCallback: tapTimeViewHandler,),
       bottomNavigationBar: _showBottomNavigationBar ? BottomAppBar(
-        child: Row(
+        child: ListView(
+          scrollDirection: Axis.horizontal,
           children: [
             IconButton(onPressed: (){
               int index = globalSetting.displayStyle.index;
@@ -60,6 +61,14 @@ class _TimePageState extends State<TimePage> {
               globalSetting.textColorsPaintIndex = index;
               setState(() {});
             }, icon: Icon(Icons.color_lens_outlined), tooltip: "换渐变色",),
+            IconButton(onPressed: (){
+              globalSetting.appScreenBrightnessValue += 0.1;
+              setState(() {});
+            }, icon: Icon(Icons.wb_twilight_rounded), tooltip: "增亮",),
+            IconButton(onPressed: (){
+              globalSetting.appScreenBrightnessValue -= 0.1;
+              setState(() {});
+            }, icon: Icon(Icons.nightlight_outlined), tooltip: "减亮",),
             IconButton(onPressed: (){
               globalSetting.timeFontSizeScale += 0.1;
               setState(() {});
