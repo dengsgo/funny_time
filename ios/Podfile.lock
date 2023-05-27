@@ -1,0 +1,28 @@
+PODS:
+  - Flutter (1.0.0)
+  - screen_brightness_ios (0.1.0):
+    - Flutter
+  - wakelock (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - screen_brightness_ios (from `.symlinks/plugins/screen_brightness_ios/ios`)
+  - wakelock (from `.symlinks/plugins/wakelock/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  screen_brightness_ios:
+    :path: ".symlinks/plugins/screen_brightness_ios/ios"
+  wakelock:
+    :path: ".symlinks/plugins/wakelock/ios"
+
+SPEC CHECKSUMS:
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  screen_brightness_ios: 715ca807df953bf676d339f11464e438143ee625
+  wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
+
+PODFILE CHECKSUM: 70d9d25280d0dd177a5f637cdb0f0b0b12c6a189
+
+COCOAPODS: 1.11.3
