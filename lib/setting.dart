@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:screen_brightness/screen_brightness.dart';
 
 SettingConfigure globalSetting = SettingConfigure();
 
@@ -42,7 +43,8 @@ class SettingConfigure {
     this.fontFamily = NumberFontFamily.jetBrainsMono,
     this.sharedScreenSize,
     this.textColorsPaintIndex = 3,
-});
+    double appScreenBrightnessValue = -1,
+}) : _appScreenBrightnessValue = appScreenBrightnessValue;
 
   // 当前的样式
   DisplayStyle displayStyle;
@@ -61,6 +63,21 @@ class SettingConfigure {
 
   // 屏幕尺寸共享
   Size? sharedScreenSize;
+
+  // plugins
+  double _appScreenBrightnessValue;
+
+  // 保存亮度值，并尝试设置app亮度
+  set appScreenBrightnessValue (v) {
+    if (v >= 1 || v <= 0.0) {
+      return;
+    }
+    appScreenBrightnessValue = v;
+    setBrightness(v);
+  }
+
+  // 获取亮度值
+  get appScreenBrightnessValue => _appScreenBrightnessValue;
 
   // 星期文字对应表
   Map<int, String> get weekdayMapping => {
@@ -153,8 +170,28 @@ class SettingConfigure {
 class SettingManager {
 
   // 将用户设置加载到内存中
-  syncToGlobalSetting() async {
-
+  Future<void> init(VoidCallback callback) async {
+    // TODO load local
+    // 获取系统亮度
+    globalSetting.appScreenBrightnessValue = await currentBrightness;
+    callback();
   }
 
+}
+
+Future<double> get currentBrightness async {
+  try {
+    return await ScreenBrightness().current;
+  } catch (e) {
+    print(e);
+  }
+  return Future(() => -1);
+}
+
+Future<void> setBrightness(double brightness) async {
+  try {
+    await ScreenBrightness().setScreenBrightness(brightness);
+  } catch (e) {
+    print(e);
+  }
 }
