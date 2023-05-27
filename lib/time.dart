@@ -51,6 +51,7 @@ class _TimePageState extends State<TimePage> {
                 index = 0;
               }
               globalSetting.fontFamily = NumberFontFamily.values[index];
+              print(globalSetting.fontFamily);
               setState(() {});
             }, icon: Icon(Icons.font_download_outlined), tooltip: "换字体",),
             IconButton(onPressed: (){
@@ -102,7 +103,7 @@ class PositionView extends StatefulWidget {
 
 }
 
-class _PositionViewState extends PositionViewState<PositionView> with AutomaticKeepAliveClientMixin {
+class _PositionViewState extends PositionViewState<PositionView> {
 
   @override
   void initState() {
@@ -144,9 +145,6 @@ class _PositionViewState extends PositionViewState<PositionView> with AutomaticK
       ],
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 
 }
 

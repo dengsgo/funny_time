@@ -149,6 +149,14 @@ class PositionViewState<T extends StatefulWidget> extends State<T> {
 
   _showErrorMessage(Object? object) {
     print(object);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("$object"), action: SnackBarAction(
+        label: 'OK',
+        onPressed: () {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        },
+      ),)
+    );
   }
 
 }
