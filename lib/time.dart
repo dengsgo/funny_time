@@ -118,7 +118,6 @@ class _PositionViewState extends PositionViewState<PositionView> {
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     final StatefulWidget view;
     switch (globalSetting.displayStyle) {
       case DisplayStyle.time:

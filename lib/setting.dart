@@ -78,7 +78,7 @@ class SettingConfigure {
     if (v >= 1 || v <= 0.0) {
       return;
     }
-    appScreenBrightnessValue = v;
+    _appScreenBrightnessValue = v;
     setBrightness(v);
   }
 
@@ -203,7 +203,7 @@ Future<double> get currentBrightness async {
   try {
     return await ScreenBrightness().current;
   } catch (e) {
-    print(e);
+    print("currentBrightness $e");
   }
   return Future(() => -1);
 }
@@ -217,13 +217,21 @@ Future<void> setBrightness(double brightness) async {
 }
 
 void wakeLockEnable() {
-  if (!kIsWeb) {
-    Wakelock.enable();
+  try {
+    if (!kIsWeb) {
+      Wakelock.enable();
+    }
+  } catch(e) {
+    print(e);
   }
 }
 
 void wakeLockDisable() {
-  if (!kIsWeb) {
-    Wakelock.disable();
+  try {
+    if (!kIsWeb) {
+      Wakelock.disable();
+    }
+  } catch(e) {
+    print(e);
   }
 }
