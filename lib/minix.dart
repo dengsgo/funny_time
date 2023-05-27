@@ -6,8 +6,6 @@ import 'package:funny_time/setting.dart';
 
 class PositionViewState<T extends StatefulWidget> extends State<T> {
   final timeViewKey = GlobalKey();
-  Size? _timeviewSize;
-  late Size _screenSize;
   EdgeInsets positionMargin = EdgeInsets.zero;
   VoidCallback? timerPeriodicCallback;
   bool _xOffsetReverse = false, _yOffsetReverse = false;
@@ -15,15 +13,19 @@ class PositionViewState<T extends StatefulWidget> extends State<T> {
   addPostFrameCallback() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       print("addPostFrameCallback $timeStamp");
-      final RenderObject? renderBox = timeViewKey.currentContext?.findRenderObject();
-      print("renderBox ${renderBox?.paintBounds.size}");
-      _timeviewSize = renderBox?.paintBounds.size;
-      _screenSize = MediaQuery.of(context).size;
-      globalSetting.sharedScreenSize = _screenSize;
-      print("_screenSize ${MediaQuery.of(context).size}");
+      resetBoxSizeValue();
       _centerWidget();
+      SettingManager.addMetricsChangeCallback(_centerWidget);
       _motionWidget();
     });
+  }
+
+  resetBoxSizeValue() {
+    final RenderObject? renderBox = timeViewKey.currentContext?.findRenderObject();
+    print("renderBox ${renderBox?.paintBounds.size}");
+    globalSetting.sharedTimeViewSize = renderBox?.paintBounds.size;
+    globalSetting.sharedScreenSize = MediaQuery.sizeOf(context);
+    print("_screenSize ${MediaQuery.of(context).size}");
   }
 
   double _kRealActiveZoneHeight(Size size) {
@@ -32,22 +34,23 @@ class PositionViewState<T extends StatefulWidget> extends State<T> {
   }
 
   _centerWidget() {
-    if (_timeviewSize == null) {
+    if (globalSetting.sharedTimeViewSize == null) {
       return;
     }
-    var widgetSize = _timeviewSize!;
+    var widgetSize = globalSetting.sharedTimeViewSize!;
+    var _screenSize = globalSetting.sharedScreenSize!;
     if (_screenSize.width < widgetSize.width) {
       // 屏幕比组件要窄
-      print("_screenSize.width < widgetSize.width");
+      _showErrorMessage("_centerWidget _screenSize.width < widgetSize.width");
       return;
     }
     if (_screenSize.height < widgetSize.height) {
       // 屏幕比组件要短
-      print("_screenSize.height < widgetSize.height");
+      _showErrorMessage("_centerWidget _screenSize.height < widgetSize.height");
       return;
     }
     double left = (_screenSize.width - widgetSize.width) / 2;
-    double top = (_kRealActiveZoneHeight(_screenSize) - widgetSize.height) / 2;
+    double top = (_screenSize.height - widgetSize.height) / 2;
     positionMargin = EdgeInsets.only(left: left, top: top);
     // 随机 x y 方向
     _xOffsetReverse = Random.secure().nextBool();
@@ -59,63 +62,68 @@ class PositionViewState<T extends StatefulWidget> extends State<T> {
     if (!globalSetting.isViewMotionOpen) {
       return;
     }
-    if (_timeviewSize == null) {
+    if (globalSetting.sharedTimeViewSize == null) {
       return;
     }
-    var widgetSize = _timeviewSize!;
+    var widgetSize = globalSetting.sharedTimeViewSize!;
+    var _screenSize = globalSetting.sharedScreenSize!;
     if (_screenSize.width < widgetSize.width) {
       // 屏幕比组件要窄
-      print("_screenSize.width < widgetSize.width");
+      print("_motionWidget _screenSize.width < widgetSize.width");
       return;
     }
     if (_screenSize.height < widgetSize.height) {
       // 屏幕比组件要短
-      print("_screenSize.height < widgetSize.height");
+      print("_motionWidget _screenSize.height < widgetSize.height");
       return;
     }
 
     timerPeriodicCallback = () {
       final RenderObject? renderBox = timeViewKey.currentContext?.findRenderObject();
-      _timeviewSize = renderBox?.paintBounds.size;
-      widgetSize = _timeviewSize!;
+      globalSetting.sharedTimeViewSize = renderBox?.paintBounds.size;
+      widgetSize = globalSetting.sharedTimeViewSize!;
       _screenSize = MediaQuery.sizeOf(context);
       globalSetting.sharedScreenSize = _screenSize; // 贡献给 global
-      if (MediaQuery.orientationOf(context) == Orientation.portrait) {
-        _screenSize = Size(_screenSize.width, _screenSize.height - 56);
-      }
       var xStep = Random.secure().nextInt(globalSetting.stepRandomMaxValue);
       var yStep = Random.secure().nextInt(globalSetting.stepRandomMaxValue);
       double left = positionMargin.left;
       double top = positionMargin.top;
+      bool isPortrait = MediaQuery.orientationOf(context) == Orientation.portrait;
+      var containerPadding = EdgeInsets.only(
+        left: isPortrait ? 0.0 : positionPaddingHeight,
+        right:  _screenSize.width,
+        top: isPortrait ? positionPaddingHeight : 0.0,
+        bottom: isPortrait ? _screenSize.height - positionPaddingHeight : _screenSize.height,
+      );
       // x-axis
       if (_xOffsetReverse) {
-        if (left - xStep > 0 && left - xStep + widgetSize.width < _screenSize.width) {
+        if (left - xStep > containerPadding.left) {
           left -= xStep;
         } else {
-          left = 0;
+          left = containerPadding.left;
           _xOffsetReverse = false;
         }
       } else {
-        if (xStep + left + widgetSize.width < _screenSize.width) {
+        if (left + xStep + widgetSize.width < containerPadding.right) {
           left += xStep;
         } else {
-          left = _screenSize.width - widgetSize.width;
+          left = containerPadding.right - widgetSize.width;
           _xOffsetReverse = true;
         }
       }
       // y-axis
       if (_yOffsetReverse) {
-        if (top - yStep > 0 && top - yStep + widgetSize.height < _screenSize.height) {
+        if (top - yStep > containerPadding.top) {
           top -= yStep;
         } else {
-          top = 0;
+          top = containerPadding.top;
           _yOffsetReverse = false;
         }
       } else {
-        if (yStep + top + widgetSize.height < _screenSize.height) {
+        if (top + yStep + widgetSize.height < containerPadding.bottom) {
           top += yStep;
         } else {
-          top = _screenSize.height - widgetSize.height;
+          top = containerPadding.bottom - widgetSize.height;
           _yOffsetReverse = true;
         }
       }
@@ -137,6 +145,10 @@ class PositionViewState<T extends StatefulWidget> extends State<T> {
   void dispose() {
     timerPeriodicCallback = null;
     super.dispose();
+  }
+
+  _showErrorMessage(Object? object) {
+    print(object);
   }
 
 }

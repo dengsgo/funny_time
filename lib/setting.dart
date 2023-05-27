@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 
+const double positionPaddingHeight = 72;
+
 SettingConfigure globalSetting = SettingConfigure();
 
 enum DisplayStyle {
@@ -38,7 +40,7 @@ class SettingConfigure {
     this.isViewMotionOpen = true,
     this.stepRandomMaxValue = 6,
     this.timeSecondColor = Colors.redAccent,
-    this.isTimeShowBorder = true,
+    this.isTimeShowBorder = false,
     this.timeBorderRadiusValue = 8,
     this.displayStyle = DisplayStyle.time,
     this.timeFontSizeScale = 1.2,
@@ -65,6 +67,7 @@ class SettingConfigure {
 
   // 屏幕尺寸共享
   Size? sharedScreenSize;
+  Size? sharedTimeViewSize;
 
   // plugins
   double _appScreenBrightnessValue;
@@ -171,6 +174,8 @@ class SettingConfigure {
 
 class SettingManager {
 
+  static VoidCallback? _metricsChangeCallback;
+
   // 将用户设置加载到内存中
   static Future<void> init(VoidCallback callback) async {
     // TODO load local
@@ -179,6 +184,16 @@ class SettingManager {
       globalSetting.appScreenBrightnessValue = await currentBrightness;
     }
     callback();
+  }
+
+  static void addMetricsChangeCallback(VoidCallback callback) {
+    _metricsChangeCallback = callback;
+  }
+
+  static void triggerMetricsChangeCallback() {
+    if (_metricsChangeCallback != null) {
+      _metricsChangeCallback!();
+    }
   }
 
 }

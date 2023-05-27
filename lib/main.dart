@@ -44,23 +44,49 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   bool loading = true;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    if (WidgetsBinding.instance.lifecycleState != null) {
+      didChangeAppLifecycleState(WidgetsBinding.instance.lifecycleState!);
+    }
     _appDataInit();
   }
 
   _appDataInit() {
     SettingManager.init(() async {
       await Future.delayed(const Duration(milliseconds: 500));
-      WidgetsBinding.instance.handlePlatformBrightnessChanged();
       setState(() {
         loading = false;
       });
     });
+  }
+
+  @override
+  didChangeAppLifecycleState(AppLifecycleState state) {
+    print("didChangeAppLifecycleState $state");
+  }
+
+  @override
+  void didChangePlatformBrightness() {
+    print("didChangePlatformBrightness");
+  }
+
+  @override
+  void didChangeMetrics() {
+    globalSetting.sharedScreenSize = MediaQuery.sizeOf(context);
+    print("didChangeMetrics ${globalSetting.sharedScreenSize}");
+    SettingManager.triggerMetricsChangeCallback();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   @override

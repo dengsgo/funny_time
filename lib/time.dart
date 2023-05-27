@@ -28,8 +28,6 @@ class _TimePageState extends State<TimePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: MediaQuery.orientationOf(context) == Orientation.portrait ?
-      AppBar(backgroundColor: Colors.black,) : null,
       body: PositionView(tapCallback: tapTimeViewHandler,),
       bottomNavigationBar: _showBottomNavigationBar ? BottomAppBar(
         child: Row(
