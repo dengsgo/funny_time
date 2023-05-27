@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 
@@ -170,10 +172,12 @@ class SettingConfigure {
 class SettingManager {
 
   // 将用户设置加载到内存中
-  Future<void> init(VoidCallback callback) async {
+  static Future<void> init(VoidCallback callback) async {
     // TODO load local
     // 获取系统亮度
-    globalSetting.appScreenBrightnessValue = await currentBrightness;
+    if (!kIsWeb) {
+      globalSetting.appScreenBrightnessValue = await currentBrightness;
+    }
     callback();
   }
 
