@@ -50,6 +50,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    wakeLockEnable();
     WidgetsBinding.instance.addObserver(this);
     if (WidgetsBinding.instance.lifecycleState != null) {
       didChangeAppLifecycleState(WidgetsBinding.instance.lifecycleState!);
@@ -68,6 +69,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
   @override
   didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      wakeLockEnable();
+    }
     print("didChangeAppLifecycleState $state");
   }
 
@@ -85,6 +89,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    wakeLockDisable();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }

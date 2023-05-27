@@ -71,8 +71,16 @@ class _TimePageState extends State<TimePage> {
           ],
         ),
       ) : null,
+      floatingActionButton: _showBottomNavigationBar ? FloatingActionButton(
+        onPressed: () {},
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
+      ) : null,
     );
   }
+
+
+
 }
 
 class PositionView extends StatefulWidget {

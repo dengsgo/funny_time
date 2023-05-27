@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:screen_brightness/screen_brightness.dart';
+import 'package:wakelock/wakelock.dart';
 
 const double positionPaddingHeight = 72;
 
@@ -212,5 +213,17 @@ Future<void> setBrightness(double brightness) async {
     await ScreenBrightness().setScreenBrightness(brightness);
   } catch (e) {
     print(e);
+  }
+}
+
+void wakeLockEnable() {
+  if (!kIsWeb) {
+    Wakelock.enable();
+  }
+}
+
+void wakeLockDisable() {
+  if (!kIsWeb) {
+    Wakelock.disable();
   }
 }
