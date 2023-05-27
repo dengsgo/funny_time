@@ -2,7 +2,7 @@ name: Android CI
 
 on:
   push:
-    branches: [ "github/actions" ]
+    branches: [ "master", "github/actions" ]
   pull_request:
     branches: [ "master" ]
 
@@ -40,7 +40,7 @@ jobs:
         with:
           if-no-files-found: ignore
           # Artifact name
-          name: buildOut # optional, default is artifact
+          name: buildAllOut.zip # optional, default is artifact
           # A file, directory or wildcard pattern that describes what to upload
           path: build/app/outputs/flutter-apk/app-debug.apk
           ## build/ios/iphoneos/Runner.app  
