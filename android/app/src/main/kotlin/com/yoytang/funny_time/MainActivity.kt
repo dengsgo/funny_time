@@ -1,4 +1,4 @@
-package com.example.funny_time
+package com.yoytang.funny_time
 
 import io.flutter.embedding.android.FlutterActivity
 
