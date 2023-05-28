@@ -14,7 +14,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: ["apk --debug", "apk --release", "appbundle --debug", "ios --no-codesign", macos, web]
+#        target: ["apk --debug", "apk --release", "appbundle --debug", "ios --no-codesign", macos, web]
+        target: ["apk --release", "ios --no-codesign"]
     steps:
       - name: Set up JDK 11
         uses: actions/setup-java@5ffc13f4174014e2d4d4572b3d74c3fa61aeb2c2 # v3.11.0
@@ -49,8 +50,9 @@ jobs:
           # Artifact name
           name: buildAllOut.zip # optional, default is artifact
           # A file, directory or wildcard pattern that describes what to upload
-          path: build/app/outputs/flutter-apk/app-debug.apk
-          ## build/ios/iphoneos/Runner.app  
+          # path: build/app/outputs/flutter-apk/app-debug.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          ## build/ios/iphoneos/Runner.app
 
             
       
