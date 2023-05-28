@@ -20,6 +20,7 @@ jobs:
         with:
           java-version: 11
           distribution: temurin
+      - run: echo $APKSTOREFILETEXT | base64 -di > android/app/keystore.jks
       # Set up Flutter.
       - name: Clone Flutter repository with master channel
         uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
