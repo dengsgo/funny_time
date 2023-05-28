@@ -32,8 +32,13 @@ jobs:
       - name: Checkout funny_time code
         uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
       - run: flutter pub get
-      - run: echo $APKSTOREFILETEXT | base64 -di > android/app/keystore.jks
+      - run: echo $ENCODED_KEYSTORE | base64 -di > android/app/keystore.jks
+        env:
+          ENCODED_KEYSTORE: ${{ secrets.APKSTOREFILETEXT }}
       - run: flutter build ${{ matrix.target }}
+        env:
+          APKKEYALIAS: ${{ secrets.APKKEYALIAS }}
+          APKSTOREPASSWORD: ${{ secrets.APKSTOREPASSWORD}}
       - run: ls -R build/
       
       - name: Upload a Build Artifact
