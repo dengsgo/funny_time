@@ -265,13 +265,10 @@ class _TimeStyleRender extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         textBaseline: TextBaseline.alphabetic,
         children: [
-          _NumberComponent(number: datetime.hour),
-          Text(":" ,style: style?.copyWith(
-            fontFamily: globalSetting.fontFamily.name,
-            fontSize: (style?.fontSize??1) * globalSetting.timeFontSizeScale,
-            foreground: globalSetting.timeTextPaint(globalSetting.textColorsPaintIndex),
-          ),),
-          _NumberComponent(number: datetime.minute),
+          TextUseSetting(
+            "${_formatNumber(datetime.hour)}:${_formatNumber(datetime.minute)}",
+            style: style,
+          ),
           Container(width: 8, height: 0,),
           _SecondIncludeTextComponent(
             number: datetime.second,
@@ -282,28 +279,6 @@ class _TimeStyleRender extends StatelessWidget {
     );
   }
 }
-
-class _NumberComponent extends StatelessWidget {
-  const _NumberComponent({super.key,
-    required this.number});
-
-  final int number;
-
-  @override
-  Widget build(BuildContext context) {
-    final String show = number > 9 ? "$number" : "0$number";
-    final style = Theme.of(context).textTheme.displayLarge;
-    return Text(show,
-      style: style?.copyWith(
-        fontFamily: globalSetting.fontFamily.name,
-        fontSize: (style?.fontSize??1) * globalSetting.timeFontSizeScale,
-          foreground: globalSetting.timeTextPaint(globalSetting.textColorsPaintIndex),
-      ),);
-  }
-
-}
-
-
 
 class _SecondComponent extends StatelessWidget {
   const _SecondComponent({super.key,
@@ -347,4 +322,28 @@ class _SecondIncludeTextComponent extends StatelessWidget {
     );
   }
 
+}
+
+class TextUseSetting extends StatelessWidget {
+  const TextUseSetting(this.data, {super.key, this.style,});
+
+  final String? data;
+  final TextStyle? style;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      data??"",
+      style: style?.copyWith(
+        fontFamily: globalSetting.fontFamily.name,
+        fontSize: (style?.fontSize??1) * globalSetting.timeFontSizeScale,
+        foreground: globalSetting.timeTextPaint(globalSetting.textColorsPaintIndex),
+      ),
+    );
+  }
+  
+}
+
+String _formatNumber(int number) {
+  return number > 9 ? "$number" : "0$number";
 }
