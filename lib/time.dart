@@ -208,18 +208,6 @@ class _TimeBlockViewState extends State<TimeBlockView> {
               TextUseSetting(_formatNumber(datetime.second), style: styleme, color: Colors.redAccent),
             ],
           ),
-          const SizedBox(
-            width: 12,
-            height: 0,
-          ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TextUseSetting(_formatNumber(datetime.minute), style: styleme,),
-              TextUseSetting(_formatNumber(datetime.second), style: styleme, color: Colors.redAccent),
-            ],
-          ),
         ],
       ),
     );
