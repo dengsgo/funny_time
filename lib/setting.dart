@@ -13,6 +13,7 @@ final SettingConfigure globalSetting = SettingConfigure();
 enum DisplayStyle {
   time,
   datetime,
+  timeBlock,
 }
 
 enum NumberFontFamily {

@@ -124,6 +124,8 @@ class _PositionViewState extends PositionViewState<PositionView> {
         view = TimeView(key: timeViewKey, timerPeriodicCallback: timerPeriodicCallback);
       case DisplayStyle.datetime:
         view = DateTimeView(key: timeViewKey, timerPeriodicCallback: timerPeriodicCallback);
+      case DisplayStyle.timeBlock:
+        view = TimeBlockView(key: timeViewKey, timerPeriodicCallback: timerPeriodicCallback);
     }
     return Stack(
       children: [
@@ -142,6 +144,68 @@ class _PositionViewState extends PositionViewState<PositionView> {
           ),
         )
       ],
+    );
+  }
+
+}
+
+class TimeBlockView extends StatefulWidget {
+  const TimeBlockView({super.key, this.timerPeriodicCallback});
+
+  final VoidCallback? timerPeriodicCallback;
+
+  @override
+  State<StatefulWidget> createState() => _TimeBlockViewState();
+
+}
+
+class _TimeBlockViewState extends State<TimeBlockView> {
+
+  late final Timer timer;
+
+  @override
+  void initState() {
+    super.initState();
+    timer = Timer.periodic(
+        const Duration(seconds: 1), (timer) {
+      (widget.timerPeriodicCallback ?? (){})();
+      setState(() {});
+    }
+    );
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final style = Theme.of(context).textTheme.displayLarge;
+    final styleme = Theme.of(context).textTheme.titleLarge;
+    final DateTime datetime = DateTime.now();
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          TextUseSetting(_formatNumber(datetime.hour), style: style,),
+          Container(
+            width: 12,
+            height: 0,
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              TextUseSetting(_formatNumber(datetime.minute), style: styleme,),
+              TextUseSetting(_formatNumber(datetime.second), style: styleme, color: Colors.redAccent),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -325,20 +389,30 @@ class _SecondIncludeTextComponent extends StatelessWidget {
 }
 
 class TextUseSetting extends StatelessWidget {
-  const TextUseSetting(this.data, {super.key, this.style,});
+  const TextUseSetting(this.data, {super.key, this.style, this.color});
 
   final String? data;
   final TextStyle? style;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
+    var custemStyle = style?.copyWith(
+      fontFamily: globalSetting.fontFamily.name,
+      fontSize: (style?.fontSize??1) * globalSetting.timeFontSizeScale,
+    );
+    if (color == null) {
+      custemStyle = custemStyle?.copyWith(
+        foreground: globalSetting.timeTextPaint(globalSetting.textColorsPaintIndex),
+      );
+    } else {
+      custemStyle = custemStyle?.copyWith(
+        color: color,
+      );
+    }
     return Text(
       data??"",
-      style: style?.copyWith(
-        fontFamily: globalSetting.fontFamily.name,
-        fontSize: (style?.fontSize??1) * globalSetting.timeFontSizeScale,
-        foreground: globalSetting.timeTextPaint(globalSetting.textColorsPaintIndex),
-      ),
+      style: custemStyle,
     );
   }
   
