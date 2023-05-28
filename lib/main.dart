@@ -102,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              CircularProgressIndicator(strokeWidth: 2,),
+              CircularProgressIndicator.adaptive(strokeWidth: 2,),
               Padding(padding: EdgeInsets.only(top: 12)),
               Text("初始化中..."),
             ],

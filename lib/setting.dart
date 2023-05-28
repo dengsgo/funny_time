@@ -8,7 +8,7 @@ import 'package:wakelock/wakelock.dart';
 
 const double positionPaddingHeight = 72;
 
-SettingConfigure globalSetting = SettingConfigure();
+final SettingConfigure globalSetting = SettingConfigure();
 
 enum DisplayStyle {
   time,
