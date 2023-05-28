@@ -3,8 +3,9 @@ import 'dart:math';
 import 'dart:ui' show Gradient;
 
 import 'package:flutter/material.dart' hide Gradient;
-import 'package:funny_time/setting.dart';
+import 'package:funny_time/config.dart';
 import 'package:funny_time/minix.dart';
+import 'package:funny_time/setting.dart';
 
 class TimePage extends StatefulWidget {
   const TimePage({super.key});
@@ -81,15 +82,18 @@ class _TimePageState extends State<TimePage> {
           ],
         ),
       ) : null,
-      floatingActionButton: _showBottomNavigationBar ? FloatingActionButton(
-        onPressed: () {},
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      floatingActionButton: _showBottomNavigationBar ? FloatingActionButton.extended(
+        onPressed: _showHelp,
+        tooltip: '设置',
+        icon: const Icon(Icons.settings),
+        label: Text("设置"),
       ) : null,
     );
   }
 
-
+  _showHelp() {
+    Navigator.of(context).pushNamed(SettingPage.routeName);
+  }
 
 }
 
@@ -192,7 +196,19 @@ class _TimeBlockViewState extends State<TimeBlockView> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           TextUseSetting(_formatNumber(datetime.hour), style: style,),
-          Container(
+          const SizedBox(
+            width: 12,
+            height: 0,
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              TextUseSetting(_formatNumber(datetime.minute), style: styleme,),
+              TextUseSetting(_formatNumber(datetime.second), style: styleme, color: Colors.redAccent),
+            ],
+          ),
+          const SizedBox(
             width: 12,
             height: 0,
           ),

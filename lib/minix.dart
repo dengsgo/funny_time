@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:funny_time/setting.dart';
+import 'package:funny_time/config.dart';
 
 class PositionViewState<T extends StatefulWidget> extends State<T> {
   final timeViewKey = GlobalKey();

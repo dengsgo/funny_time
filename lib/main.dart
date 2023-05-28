@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:funny_time/config.dart';
 import 'package:funny_time/setting.dart';
 import 'package:funny_time/time.dart';
 import 'package:funny_time/color_schemes.g.dart';
@@ -33,6 +34,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
       darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
       home: const MyHomePage(),
+      routes: {
+        SettingPage.routeName: (context) => SettingPage(),
+      },
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -98,6 +102,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     if (loading) {
       return Scaffold(
+        backgroundColor: Colors.black,
         body: const Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -107,12 +112,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
               Text("初始化中..."),
             ],
           ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          tooltip: 'Increment',
-          child: const Icon(Icons.add),
-        ), // This trailing comma makes auto-formatting nicer for build methods.
+        )// This trailing comma makes auto-formatting nicer for build methods.
       );
     }
     return const TimePage();
