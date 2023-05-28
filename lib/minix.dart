@@ -127,6 +127,13 @@ class PositionViewState<T extends StatefulWidget> extends State<T> {
           _yOffsetReverse = true;
         }
       }
+      // 如果出现显示异常，做最后的修正
+      if (left + widgetSize.width > containerPadding.right) {
+        left = containerPadding.right - widgetSize.width;
+      }
+      if (top + widgetSize.height > containerPadding.bottom) {
+        top = containerPadding.bottom - widgetSize.height;
+      }
       positionMargin = EdgeInsets.only(
           left: left,
           top: top
