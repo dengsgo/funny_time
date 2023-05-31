@@ -13,9 +13,6 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
 
-  String? openWeatherApikey;
-  String? weatherCity;
-
   @override
   void initState() {
     super.initState();
@@ -23,10 +20,8 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   _initData() {
-    openWeatherApikey = SettingManager.getConfig<String>(SettingName.openWeatherApikey);
-    weatherCity = SettingManager.getConfig<String>(SettingName.weatherCity);
-    globalSetting.weatherCity = weatherCity;
-    globalSetting.weatherApiKey = openWeatherApikey;
+    globalSetting.weatherApiKey = SettingManager.getConfig<String>(SettingName.openWeatherApikey);
+    globalSetting.weatherCity = SettingManager.getConfig<String>(SettingName.weatherCity);
     if (mounted) {
       setState(() {
       });
@@ -42,14 +37,14 @@ class _SettingPageState extends State<SettingPage> {
           ListTile(title: Text("天气", style: Theme.of(context).textTheme.titleLarge,),),
           ListTile(
             title: Text("城市/地区"),
-            subtitle: weatherCity == null ? null : Text(weatherCity!),
+            subtitle: globalSetting.weatherCity == null ? null : Text(globalSetting.weatherCity!),
             trailing: Icon(Icons.chevron_right),
             onTap: () async {
               String? text = await Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => _TextSettingPage(appbarTitle: "City, 如 Shanghai",),
               ));
               print(text);
-              if (text != null && text != weatherCity) {
+              if (text != null && text != globalSetting.weatherCity) {
                 SettingManager.setConfig(SettingName.weatherCity, text.trim());
               }
               _initData();
@@ -57,14 +52,14 @@ class _SettingPageState extends State<SettingPage> {
           ),
           ListTile(
             title: Text("接口Key (OpenWeather Apikey)"),
-            subtitle: openWeatherApikey == null ? null : Text(openWeatherApikey!),
+            subtitle: globalSetting.weatherApiKey == null ? null : Text(globalSetting.weatherApiKey!),
             trailing: Icon(Icons.chevron_right),
             onTap: () async {
               String? text = await Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => _TextSettingPage(appbarTitle: "Apikey",),
               ));
               print(text);
-              if (text != null && text != openWeatherApikey) {
+              if (text != null && text != globalSetting.weatherApiKey) {
                 SettingManager.setConfig(SettingName.openWeatherApikey, text.trim());
               }
               _initData();
@@ -72,10 +67,11 @@ class _SettingPageState extends State<SettingPage> {
           ),
           ListTile(
             title: Text("强制更新天气"),
-            subtitle: Text("忽略缓存，重新请求一次天气接口"),
+            subtitle: Text("自打开App已请求接口 ${globalSetting.weatherActiveFlushApiCount} 次"),
             onTap: () async {
               await SettingManager.flushWeatherInfo(false);
               _initData();
+
             },
           )
         ],

@@ -80,6 +80,7 @@ class SettingConfigure {
   String? weatherCity;
   String? weatherApiKey;
   int weatherLastUpdateTime;
+  int weatherActiveFlushApiCount = 0;
 
   // 屏幕尺寸共享
   Size? sharedScreenSize;
@@ -244,6 +245,7 @@ class SettingManager {
   static flushWeatherInfo([bool useCache = true]) async {
     print("flushWeatherInfo in");
     if (globalSetting.weatherApiKey == null || globalSetting.weatherCity == null) {
+      globalSetting.weatherInfo = const WeatherInfo(0, Temperature(0, 0), Weather('', 'fail', 0, ''));
       return ;
     }
     print("flushWeatherInfo exec");
@@ -256,6 +258,7 @@ class SettingManager {
       if (weatherList.length > 0) {
         globalSetting.weatherInfo = getCurrentWeatherInfo(weatherList);
         setConfig(SettingName.weatherLastUpdateTime, globalSetting.weatherLastUpdateTime);
+        globalSetting.weatherActiveFlushApiCount++;
       }
     }
   }
