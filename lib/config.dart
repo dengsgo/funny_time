@@ -103,7 +103,7 @@ class SettingConfigure {
   get appScreenBrightnessValue => _appScreenBrightnessValue;
 
   // 星期文字对应表
-  Map<int, String> get weekdayMapping => {
+  Map<int, String> get weekdayMapping => const {
     1: "星期一",
     2: "星期二",
     3: "星期三",
@@ -114,7 +114,7 @@ class SettingConfigure {
   };
 
   // 小时文字对应表
-  Map<int, String> get hourMapping => {
+  Map<int, String> get hourMapping => const {
     23: "深夜",
     0: "深夜",
     1: "深夜",
@@ -142,7 +142,7 @@ class SettingConfigure {
   };
 
   // 渐变颜色表
-  List<List<Color>> get paintLinearColorsMap => [
+  List<List<Color>> get paintLinearColorsMap => const [
     [], // 0 default = null
     [
       Colors.blue,
@@ -177,7 +177,7 @@ class SettingConfigure {
   ];
 
   // 获取openweather天气图标对应表
-  Map<String, IconData> get weatherIconDataMap => {
+  Map<String, IconData> get weatherIconDataMap => const {
     "01d": WeatherIcons.sunny,
     "02d": WeatherIcons.cloudy,
     "03d": WeatherIcons.overcast,
