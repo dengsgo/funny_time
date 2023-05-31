@@ -45,7 +45,7 @@ class _SettingPageState extends State<SettingPage> {
               ));
               print(text);
               if (text != null && text != globalSetting.weatherCity) {
-                SettingManager.setConfig(SettingName.weatherCity, text.trim());
+                SettingManager.setConfig<String>(SettingName.weatherCity, text.trim());
               }
               _initData();
             },
@@ -60,7 +60,7 @@ class _SettingPageState extends State<SettingPage> {
               ));
               print(text);
               if (text != null && text != globalSetting.weatherApiKey) {
-                SettingManager.setConfig(SettingName.openWeatherApikey, text.trim());
+                SettingManager.setConfig<String>(SettingName.openWeatherApikey, text.trim());
               }
               _initData();
             },

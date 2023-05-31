@@ -216,6 +216,7 @@ class SettingConfigure {
 }
 
 enum SettingName {
+  weatherInfo,
   weatherCity,
   openWeatherApikey,
   weatherLastUpdateTime,
@@ -235,12 +236,19 @@ class SettingManager {
     }
     // Obtain shared preferences.
     globalSetting.localStore = await SharedPreferences.getInstance();
+    callback();
     // load weather
+    var weatherStrInfo = getConfig<String>(SettingName.weatherInfo);
+    print(weatherStrInfo);
+    globalSetting.weatherInfo = WeatherInfo.fromJsonStr(weatherStrInfo);
     globalSetting.weatherCity = getConfig<String>(SettingName.weatherCity);
     globalSetting.weatherApiKey = getConfig<String>(SettingName.openWeatherApikey);
     globalSetting.weatherLastUpdateTime = getConfig<int>(SettingName.weatherLastUpdateTime) ?? 0;
+    print(globalSetting.weatherInfo);
+    if (globalSetting.weatherInfo.weather.icon == '') {
+      await flushWeatherInfo(false);
+    }
     await flushWeatherInfo();
-    callback();
   }
 
   // 刷新天气信息
@@ -259,7 +267,10 @@ class SettingManager {
       print(weatherList);
       if (weatherList.length > 0) {
         globalSetting.weatherInfo = getCurrentWeatherInfo(weatherList);
-        setConfig(SettingName.weatherLastUpdateTime, globalSetting.weatherLastUpdateTime);
+        setConfig<String>(SettingName.weatherInfo, globalSetting.weatherInfo.toString());
+        print("save");
+        print(globalSetting.weatherInfo.toString());
+        setConfig<int>(SettingName.weatherLastUpdateTime, globalSetting.weatherLastUpdateTime);
         globalSetting.weatherActiveFlushApiCount++;
       }
     }

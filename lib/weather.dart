@@ -10,7 +10,7 @@ class Weather {
     return Weather(
         map['description'] ?? '',
         map['icon'] ?? '',
-        map['id'] ?? '',
+        map['id'] ?? 0,
         map['main'] ?? '');
   }
 
@@ -21,7 +21,7 @@ class Weather {
 
   @override
   String toString() {
-    return "Weather{description: $description, icon: $icon, id: $id, main: $main}";
+    return '{"description": "$description", "icon": "$icon", "id": $id, "main": "$main"}';
   }
 }
 
@@ -41,7 +41,7 @@ class Temperature {
 
   @override
   String toString() {
-    return "Temperature{temp: $temp, feelsLike: $feelsLike}";
+    return '{"temp": $temp, "feels_like": $feelsLike, "humidity": $humidity}';
   }
 }
 
@@ -52,7 +52,23 @@ class WeatherInfo {
     return WeatherInfo(
         map['dt'] ?? 0,
         Temperature.fromJsonMap(map['main'] ?? {}),
-        Weather.fromJsonMap(map['weather'][0] ?? {}));
+        Weather.fromJsonMap(map['weather']?[0] ?? {}));
+  }
+
+  factory WeatherInfo.fromEmpty() {
+    return WeatherInfo.fromJsonMap(<String, dynamic>{});
+  }
+
+  factory WeatherInfo.fromJsonStr(String? str) {
+    if (str == null) {
+      return WeatherInfo.fromEmpty();
+    }
+    try {
+      return WeatherInfo.fromJsonMap(jsonDecode(str));
+    } catch(e) {
+      print(e);
+    }
+    return WeatherInfo.fromEmpty();
   }
 
   final int dt;
@@ -61,7 +77,7 @@ class WeatherInfo {
 
   @override
   String toString() {
-    return "WeatherInfo{dt: $dt, temp: $temp, weather: $weather}";
+    return '{"dt":$dt, "main": ${temp}, "weather": [$weather]}';
   }
 }
 
