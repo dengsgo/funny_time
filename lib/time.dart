@@ -134,6 +134,10 @@ class _PositionViewState extends PositionViewState<PositionView> {
         view = TimeBlockView(key: timeViewKey, timerPeriodicCallback: timerPeriodicCallback);
       case DisplayStyle.timeBlockWeather:
         view = TimeBlockView(key: timeViewKey, timerPeriodicCallback: timerPeriodicCallback, weatherStyle: 1,);
+      case DisplayStyle.timeBlockTemp:
+        view = TimeBlockView(key: timeViewKey, timerPeriodicCallback: timerPeriodicCallback, weatherStyle: 2,);
+      case DisplayStyle.timeBlockWeaTemp:
+        view = TimeBlockView(key: timeViewKey, timerPeriodicCallback: timerPeriodicCallback, weatherStyle: 3,);
     }
     return Stack(
       children: [
@@ -208,7 +212,7 @@ class _TimeBlockViewState extends State<TimeBlockView> {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ..._weatherStyle1Widgets(),
+          ..._weatherStyleWidgets(),
           TextUseSetting(_formatNumber(datetime.hour), style: style,),
           const SizedBox(
             width: 12,
@@ -227,43 +231,90 @@ class _TimeBlockViewState extends State<TimeBlockView> {
     );
   }
 
-  List<Widget> _weatherStyle1Widgets() {
-    switch (widget.weatherStyle) {
-      case 0:
-        return <Widget>[];
-      case 1:
-        late final Widget icon;
-        if (globalSetting.weatherInfo.weather.icon == "") {
-          // 加载中
-          icon = const CircularProgressIndicator.adaptive(
-            strokeWidth: 2,
-          );
-        } else if (globalSetting.weatherInfo.weather.icon == "fail") {
-          // 加载失败
-          icon = Text('获取失败');
-        } else {
-          icon = Icon(globalSetting.weatherIconDataMap[globalSetting.weatherInfo.weather.icon] ?? Icons.downloading_rounded,
-            size: 40 * globalSetting.timeFontSizeScale, color: Colors.white.withOpacity(0.9),);
-        }
-        return <Widget>[
-          icon,
-          Container(
-            height: 16 * globalSetting.timeFontSizeScale,
-            width: 0,
-            margin: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: const BoxDecoration(
-              border: Border.symmetric(
-                vertical: BorderSide(
-                  width: 0.5,
-                  color: Colors.white54,
-                ),
-              ),
-            ),
-          )
-        ];
-      default:
-        return <Widget>[];
+  Widget _weatherStyle1Widget() {
+    return Icon(globalSetting.weatherIconDataMap[globalSetting.weatherInfo.weather.icon] ?? WeatherIcons.unknown,
+      size: 40 * globalSetting.timeFontSizeScale, color: Colors.white.withOpacity(0.9),);
+  }
+
+  Widget _weatherStyle2Widget() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(WeatherIcons.hotDay, size: 12 * globalSetting.timeFontSizeScale,),
+            Text("  ${globalSetting.weatherInfo.temp.temp.round()}℃"),
+          ],
+        ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(WeatherIcons.lowHumidity, size: 12 * globalSetting.timeFontSizeScale,),
+            Text("  ${globalSetting.weatherInfo.temp.humidity}％"),
+          ],
+        ),
+      ],
+    );
+  }
+
+  List<Widget> _weatherStyleWidgets() {
+    if (widget.weatherStyle == 0) {
+      return <Widget>[];
     }
+    late final Widget icon;
+    if (globalSetting.weatherInfo.weather.icon == "") {
+      // 加载中
+      icon = const CircularProgressIndicator.adaptive(
+        strokeWidth: 2,
+      );
+    } else if (globalSetting.weatherInfo.weather.icon == "fail") {
+      // 加载失败
+      icon = Icon(WeatherIcons.unknown,
+        size: 40 * globalSetting.timeFontSizeScale, color: Colors.white.withOpacity(0.9),);;
+    } else {
+      switch (widget.weatherStyle) {
+        case 1:
+          icon = _weatherStyle1Widget();
+          break;
+        case 2:
+          icon = _weatherStyle2Widget();
+          break;
+        default:
+          icon = Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _weatherStyle1Widget(),
+              SizedBox(
+                width: 12,
+              ),
+              _weatherStyle2Widget(),
+            ],
+          );
+      }
+    }
+
+    return <Widget>[
+      icon,
+      Container(
+        height: 16 * globalSetting.timeFontSizeScale,
+        width: 0,
+        margin: const EdgeInsets.symmetric(horizontal: 12),
+        decoration: const BoxDecoration(
+          border: Border.symmetric(
+            vertical: BorderSide(
+              width: 0.5,
+              color: Colors.white54,
+            ),
+          ),
+        ),
+      )
+    ];
   }
 
 }

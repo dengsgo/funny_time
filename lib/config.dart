@@ -18,6 +18,8 @@ enum DisplayStyle {
   datetime,
   timeBlock,
   timeBlockWeather,
+  timeBlockTemp,
+  timeBlockWeaTemp,
 }
 
 enum NumberFontFamily {
@@ -48,7 +50,7 @@ class SettingConfigure {
     this.timeSecondColor = Colors.redAccent,
     this.isTimeShowBorder = false,
     this.timeBorderRadiusValue = 8,
-    this.displayStyle = DisplayStyle.timeBlock,
+    this.displayStyle = DisplayStyle.timeBlockTemp,
     this.timeFontSizeScale = 1.2,
     this.fontFamily = NumberFontFamily.jetBrainsMono,
     this.sharedScreenSize,
@@ -57,7 +59,7 @@ class SettingConfigure {
     this.weatherCity,
     this.weatherApiKey,
     this.weatherLastUpdateTime = 0,
-    this.weatherInfo = const WeatherInfo(0, Temperature(0, 0), Weather('', '', 0, '')),
+    this.weatherInfo = const WeatherInfo(0, Temperature(0, 0, 0), Weather('', '', 0, '')),
 }) : _appScreenBrightnessValue = appScreenBrightnessValue;
 
   // 当前的样式
@@ -245,7 +247,7 @@ class SettingManager {
   static flushWeatherInfo([bool useCache = true]) async {
     print("flushWeatherInfo in");
     if (globalSetting.weatherApiKey == null || globalSetting.weatherCity == null) {
-      globalSetting.weatherInfo = const WeatherInfo(0, Temperature(0, 0), Weather('', 'fail', 0, ''));
+      globalSetting.weatherInfo = const WeatherInfo(0, Temperature(0, 0, 0), Weather('', 'fail', 0, ''));
       return ;
     }
     print("flushWeatherInfo exec");

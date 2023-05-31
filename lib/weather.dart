@@ -26,16 +26,18 @@ class Weather {
 }
 
 class Temperature {
-  const Temperature(this.temp, this.feelsLike);
+  const Temperature(this.temp, this.feelsLike, this.humidity);
 
   factory Temperature.fromJsonMap(Map<String, dynamic> map) {
     return Temperature(
         map['temp'] ?? 0.0,
-        map['feels_like'] ?? 0.0);
+        map['feels_like'] ?? 0.0,
+        map['humidity'] ?? 0.0);
   }
 
   final double temp;
   final double feelsLike;
+  final double humidity;
 
   @override
   String toString() {
