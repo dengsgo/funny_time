@@ -63,6 +63,9 @@ flutter:
   uses-material-design: true
 
   fonts:
+    - family: qweather-icons
+      fonts:
+        - asset: fonts/qweather-icons.ttf
     - family: JetBrainsMono
       fonts:
         - asset: fonts/JetBrainsMono-Regular-2.ttf

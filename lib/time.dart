@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:ui' show Gradient;
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide Gradient;
 import 'package:funny_time/config.dart';
+import 'package:funny_time/icons.dart';
 import 'package:funny_time/minix.dart';
 import 'package:funny_time/setting.dart';
 
@@ -130,6 +132,8 @@ class _PositionViewState extends PositionViewState<PositionView> {
         view = DateTimeView(key: timeViewKey, timerPeriodicCallback: timerPeriodicCallback);
       case DisplayStyle.timeBlock:
         view = TimeBlockView(key: timeViewKey, timerPeriodicCallback: timerPeriodicCallback);
+      case DisplayStyle.timeBlockWeather:
+        view = TimeBlockView(key: timeViewKey, timerPeriodicCallback: timerPeriodicCallback, weatherStyle: 1,);
     }
     return Stack(
       children: [
@@ -154,9 +158,10 @@ class _PositionViewState extends PositionViewState<PositionView> {
 }
 
 class TimeBlockView extends StatefulWidget {
-  const TimeBlockView({super.key, this.timerPeriodicCallback});
+  const TimeBlockView({super.key, this.timerPeriodicCallback, this.weatherStyle = 0});
 
   final VoidCallback? timerPeriodicCallback;
+  final int weatherStyle;
 
   @override
   State<StatefulWidget> createState() => _TimeBlockViewState();
@@ -174,8 +179,16 @@ class _TimeBlockViewState extends State<TimeBlockView> {
         const Duration(seconds: 1), (timer) {
       (widget.timerPeriodicCallback ?? (){})();
       setState(() {});
+      _updateWeather();
     }
     );
+  }
+
+  _updateWeather() {
+    if (widget.weatherStyle == 0) {
+      return ;
+    }
+    SettingManager.flushWeatherInfo();
   }
 
   @override
@@ -195,6 +208,7 @@ class _TimeBlockViewState extends State<TimeBlockView> {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          ..._weatherStyle1Widgets(),
           TextUseSetting(_formatNumber(datetime.hour), style: style,),
           const SizedBox(
             width: 12,
@@ -211,6 +225,45 @@ class _TimeBlockViewState extends State<TimeBlockView> {
         ],
       ),
     );
+  }
+
+  List<Widget> _weatherStyle1Widgets() {
+    switch (widget.weatherStyle) {
+      case 0:
+        return <Widget>[];
+      case 1:
+        late final Widget icon;
+        if (globalSetting.weatherInfo.weather.icon == "") {
+          // 加载中
+          icon = const CircularProgressIndicator.adaptive(
+            strokeWidth: 2,
+          );
+        } else if (globalSetting.weatherInfo.weather.icon == "fail") {
+          // 加载失败
+          icon = Text('获取失败');
+        } else {
+          icon = Icon(globalSetting.weatherIconDataMap[globalSetting.weatherInfo.weather.icon] ?? Icons.downloading_rounded,
+            size: 40 * globalSetting.timeFontSizeScale, color: Colors.white.withOpacity(0.9),);
+        }
+        return <Widget>[
+          icon,
+          Container(
+            height: 16 * globalSetting.timeFontSizeScale,
+            width: 0,
+            margin: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: const BoxDecoration(
+              border: Border.symmetric(
+                vertical: BorderSide(
+                  width: 0.5,
+                  color: Colors.white54,
+                ),
+              ),
+            ),
+          )
+        ];
+      default:
+        return <Widget>[];
+    }
   }
 
 }

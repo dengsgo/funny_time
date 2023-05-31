@@ -3,6 +3,8 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:funny_time/icons.dart';
+import 'package:funny_time/weather.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wakelock/wakelock.dart';
@@ -15,6 +17,7 @@ enum DisplayStyle {
   time,
   datetime,
   timeBlock,
+  timeBlockWeather,
 }
 
 enum NumberFontFamily {
@@ -45,12 +48,16 @@ class SettingConfigure {
     this.timeSecondColor = Colors.redAccent,
     this.isTimeShowBorder = false,
     this.timeBorderRadiusValue = 8,
-    this.displayStyle = DisplayStyle.time,
+    this.displayStyle = DisplayStyle.timeBlock,
     this.timeFontSizeScale = 1.2,
     this.fontFamily = NumberFontFamily.jetBrainsMono,
     this.sharedScreenSize,
     this.textColorsPaintIndex = 3,
     double appScreenBrightnessValue = -1,
+    this.weatherCity,
+    this.weatherApiKey,
+    this.weatherLastUpdateTime = 0,
+    this.weatherInfo = const WeatherInfo(0, Temperature(0, 0), Weather('', '', 0, '')),
 }) : _appScreenBrightnessValue = appScreenBrightnessValue;
 
   // 当前的样式
@@ -67,6 +74,12 @@ class SettingConfigure {
   double timeBorderRadiusValue;
   double timeFontSizeScale;
   int textColorsPaintIndex;
+
+  // 天气显示设置
+  WeatherInfo weatherInfo;
+  String? weatherCity;
+  String? weatherApiKey;
+  int weatherLastUpdateTime;
 
   // 屏幕尺寸共享
   Size? sharedScreenSize;
@@ -162,6 +175,29 @@ class SettingConfigure {
     ],
   ];
 
+  // 获取openweather天气图标对应表
+  Map<String, IconData> get weatherIconDataMap => {
+    "01d": WeatherIcons.sunny,
+    "02d": WeatherIcons.cloudy,
+    "03d": WeatherIcons.overcast,
+    "04d": WeatherIcons.overcast,
+    "09d": WeatherIcons.showerRain,
+    "10d": WeatherIcons.rain,
+    "11d": WeatherIcons.thunderstorm,
+    "13d": WeatherIcons.snow,
+    "50d": WeatherIcons.fog,
+
+    "01n": WeatherIcons.sunny,
+    "02n": WeatherIcons.cloudy,
+    "03n": WeatherIcons.overcast,
+    "04n": WeatherIcons.overcast,
+    "09n": WeatherIcons.showerRain,
+    "10n": WeatherIcons.rain,
+    "11n": WeatherIcons.thunderstorm,
+    "13n": WeatherIcons.snow,
+    "50n": WeatherIcons.fog,
+  };
+
   Paint? timeTextPaint(int index) {
     if (globalSetting.textColorsPaintIndex == 0
         || index >= globalSetting.paintLinearColorsMap.length) {
@@ -177,7 +213,9 @@ class SettingConfigure {
 }
 
 enum SettingName {
+  weatherCity,
   openWeatherApikey,
+  weatherLastUpdateTime,
   ;
 }
 
@@ -194,7 +232,32 @@ class SettingManager {
     }
     // Obtain shared preferences.
     globalSetting.localStore = await SharedPreferences.getInstance();
+    // load weather
+    globalSetting.weatherCity = getConfig<String>(SettingName.weatherCity);
+    globalSetting.weatherApiKey = getConfig<String>(SettingName.openWeatherApikey);
+    globalSetting.weatherLastUpdateTime = getConfig<int>(SettingName.weatherLastUpdateTime) ?? 0;
+    await flushWeatherInfo();
     callback();
+  }
+
+  // 刷新天气信息
+  static flushWeatherInfo([bool useCache = true]) async {
+    print("flushWeatherInfo in");
+    if (globalSetting.weatherApiKey == null || globalSetting.weatherCity == null) {
+      return ;
+    }
+    print("flushWeatherInfo exec");
+    // half an hour update once at most
+    if (!useCache || DateTime.now().millisecondsSinceEpoch - globalSetting.weatherLastUpdateTime > 1000 * 60 * 30) {
+      globalSetting.weatherLastUpdateTime = DateTime.now().millisecondsSinceEpoch;
+      final weatherList = await fetchOpenWeatherApi(globalSetting.weatherCity!, globalSetting.weatherApiKey!);
+      print("weatherList");
+      print(weatherList);
+      if (weatherList.length > 0) {
+        globalSetting.weatherInfo = getCurrentWeatherInfo(weatherList);
+        setConfig(SettingName.weatherLastUpdateTime, globalSetting.weatherLastUpdateTime);
+      }
+    }
   }
 
   static void addMetricsChangeCallback(VoidCallback callback) {
@@ -268,3 +331,6 @@ void wakeLockDisable() {
     print(e);
   }
 }
+
+// weather icons
+
