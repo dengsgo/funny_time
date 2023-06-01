@@ -86,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
   @override
   void didChangeMetrics() {
-    globalSetting.sharedScreenSize = MediaQuery.sizeOf(context);
+    // globalSetting.sharedScreenSize = MediaQuery.sizeOf(context);
     print("didChangeMetrics ${globalSetting.sharedScreenSize}");
     SettingManager.triggerMetricsChangeCallback();
   }
@@ -101,9 +101,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     if (loading) {
-      return Scaffold(
+      return const Scaffold(
         backgroundColor: Colors.black,
-        body: const Center(
+        body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[

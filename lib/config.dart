@@ -20,6 +20,10 @@ enum DisplayStyle {
   timeBlockWeather,
   timeBlockTemp,
   timeBlockWeaTemp,
+  weatherBigTemp,
+  weatherBigTemp1,
+  weatherBigTemp1Time,
+  weatherBigTemp1Time1,
 }
 
 enum NumberFontFamily {
@@ -50,7 +54,7 @@ class SettingConfigure {
     this.timeSecondColor = Colors.redAccent,
     this.isTimeShowBorder = false,
     this.timeBorderRadiusValue = 8,
-    this.displayStyle = DisplayStyle.timeBlockTemp,
+    this.displayStyle = DisplayStyle.weatherBigTemp1Time1,
     this.timeFontSizeScale = 1.2,
     this.fontFamily = NumberFontFamily.jetBrainsMono,
     this.sharedScreenSize,

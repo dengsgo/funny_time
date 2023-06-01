@@ -31,7 +31,13 @@ class _TimePageState extends State<TimePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: PositionView(tapCallback: tapTimeViewHandler,),
+      body: OrientationBuilder(
+        builder: (context, orientation) {
+          print("OrientationBuilder $orientation ${MediaQuery.sizeOf(context)}");
+          globalSetting.sharedScreenSize = MediaQuery.sizeOf(context);
+          return PositionView(tapCallback: tapTimeViewHandler,);
+        },
+      ),
       bottomNavigationBar: _showBottomNavigationBar ? BottomAppBar(
         child: ListView(
           scrollDirection: Axis.horizontal,
@@ -138,6 +144,14 @@ class _PositionViewState extends PositionViewState<PositionView> {
         view = TimeBlockView(key: timeViewKey, timerPeriodicCallback: timerPeriodicCallback, weatherStyle: 2,);
       case DisplayStyle.timeBlockWeaTemp:
         view = TimeBlockView(key: timeViewKey, timerPeriodicCallback: timerPeriodicCallback, weatherStyle: 3,);
+      case DisplayStyle.weatherBigTemp:
+        view = WeatherView(key: timeViewKey, timerPeriodicCallback: timerPeriodicCallback);
+      case DisplayStyle.weatherBigTemp1:
+        view = WeatherView(key: timeViewKey, timerPeriodicCallback: timerPeriodicCallback, weatherStyle: 1,);
+      case DisplayStyle.weatherBigTemp1Time:
+        view = WeatherView(key: timeViewKey, timerPeriodicCallback: timerPeriodicCallback, weatherStyle: 2,);
+      case DisplayStyle.weatherBigTemp1Time1:
+        view = WeatherView(key: timeViewKey, timerPeriodicCallback: timerPeriodicCallback, weatherStyle: 3,);
     }
     return Stack(
       children: [
@@ -161,6 +175,142 @@ class _PositionViewState extends PositionViewState<PositionView> {
 
 }
 
+class WeatherView extends StatefulWidget {
+  const WeatherView({super.key, this.timerPeriodicCallback, this.weatherStyle = 0});
+
+  final VoidCallback? timerPeriodicCallback;
+  final int weatherStyle;
+
+  @override
+  State<WeatherView> createState() => _WeatherViewState();
+}
+
+class _WeatherViewState extends State<WeatherView> {
+
+  late final Timer timer;
+  late final Timer timerUpdateWeather;
+
+  @override
+  void initState() {
+    super.initState();
+    timer = Timer.periodic(const Duration(seconds: 3), (timer) {
+      if (widget.timerPeriodicCallback != null) {
+        widget.timerPeriodicCallback!();
+      }
+    });
+    timerUpdateWeather = Timer.periodic(const Duration(minutes: 1), (timer) {
+      SettingManager.flushWeatherInfo();
+    });
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    timerUpdateWeather.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final body = IntrinsicHeight(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: _styleTempWidgets(),
+        )
+    );
+    if (widget.weatherStyle > 1) {
+      return IntrinsicWidth(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            body,
+            const Divider(color: Colors.white70, indent: 8, endIndent: 8),
+            ..._styleTimeWidgets()
+          ],
+        ),
+      );
+    }
+    return body;
+  }
+
+  List<Widget> _styleTimeWidgets() {
+    final datetime = DateTime.now();
+    final textTheme = Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 12 * globalSetting.timeFontSizeScale);
+    switch (widget.weatherStyle) {
+      case 2:
+        return [
+          TextUseSetting("${globalSetting.weatherInfo.weather.description}", style: textTheme,),
+          TextUseSetting("${_formatNumber(datetime.hour)}:${_formatNumber(datetime.minute)}", style: textTheme,),
+        ];
+      case 3:
+        return [
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Icon(globalSetting.weatherIconDataMap[globalSetting.weatherInfo.weather.icon] ?? WeatherIcons.unknown, size: 14 * globalSetting.timeFontSizeScale,),
+              TextUseSetting("${globalSetting.weatherInfo.weather.description}", style: textTheme,),
+              TextUseSetting("${_formatNumber(datetime.hour)}:${_formatNumber(datetime.minute)}", style: textTheme,),
+            ],
+          )
+        ];
+      default:
+        return [];
+    }
+  }
+
+  List<Widget> _styleTempWidgets() {
+    final bigTextTheme = Theme.of(context).textTheme.displayLarge;
+    final textTheme = Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 12 * globalSetting.timeFontSizeScale);
+    switch (widget.weatherStyle) {
+      case 0:
+        return [
+          TextUseSetting("${globalSetting.weatherInfo.temp.tempRound}℃", style: bigTextTheme,)
+        ];
+      default:
+        return [
+          TextUseSetting("${globalSetting.weatherInfo.temp.tempRound}", style: bigTextTheme,),
+          TextUseSetting("℃"),
+          SizedBox(
+            width: 12,
+          ),
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text('湿度  ', style: textTheme,),
+                    TextUseSetting("${globalSetting.weatherInfo.temp.humidityInt}%")
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Icon(globalSetting.weatherIconDataMap[globalSetting.weatherInfo.weather.icon] ?? WeatherIcons.unknown),
+                    Text('体感  ', style: textTheme,),
+                    TextUseSetting("${globalSetting.weatherInfo.temp.feelsLikeInt}℃")
+                  ],
+                )
+              ],
+            ),
+          ),
+        ];
+    }
+  }
+
+}
+
 class TimeBlockView extends StatefulWidget {
   const TimeBlockView({super.key, this.timerPeriodicCallback, this.weatherStyle = 0});
 
@@ -175,6 +325,7 @@ class TimeBlockView extends StatefulWidget {
 class _TimeBlockViewState extends State<TimeBlockView> {
 
   late final Timer timer;
+  late final Timer timerUpdateWeather;
 
   @override
   void initState() {
@@ -183,6 +334,9 @@ class _TimeBlockViewState extends State<TimeBlockView> {
         const Duration(seconds: 1), (timer) {
       (widget.timerPeriodicCallback ?? (){})();
       setState(() {});
+    }
+    );
+    timerUpdateWeather = Timer.periodic(const Duration(minutes: 1), (timer) {
       _updateWeather();
     }
     );
@@ -197,7 +351,9 @@ class _TimeBlockViewState extends State<TimeBlockView> {
 
   @override
   void dispose() {
+    print("_TimeBlockViewState dispose");
     timer.cancel();
+    timerUpdateWeather?.cancel();
     super.dispose();
   }
 
@@ -505,9 +661,11 @@ class TextUseSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var custemStyle = style?.copyWith(
+    var _style = style;
+    _style ??= Theme.of(context).textTheme.bodyMedium;
+    var custemStyle = _style?.copyWith(
       fontFamily: globalSetting.fontFamily.name,
-      fontSize: (style?.fontSize??1) * globalSetting.timeFontSizeScale,
+      fontSize: (_style?.fontSize??1) * globalSetting.timeFontSizeScale,
     );
     if (color == null) {
       custemStyle = custemStyle?.copyWith(

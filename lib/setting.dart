@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:funny_time/config.dart';
+import 'package:funny_time/time.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -16,12 +17,10 @@ class _SettingPageState extends State<SettingPage> {
   @override
   void initState() {
     super.initState();
-    _initData();
   }
 
   _initData() {
-    globalSetting.weatherApiKey = SettingManager.getConfig<String>(SettingName.openWeatherApikey);
-    globalSetting.weatherCity = SettingManager.getConfig<String>(SettingName.weatherCity);
+    SettingManager.flushWeatherInfo(false);
     if (mounted) {
       setState(() {
       });
@@ -41,13 +40,14 @@ class _SettingPageState extends State<SettingPage> {
             trailing: Icon(Icons.chevron_right),
             onTap: () async {
               String? text = await Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => _TextSettingPage(appbarTitle: "City, 如 Shanghai",),
+                builder: (context) => _TextSettingPage(appbarTitle: "City, 如 Shanghai", text: globalSetting.weatherCity,),
               ));
               print(text);
               if (text != null && text != globalSetting.weatherCity) {
+                globalSetting.weatherCity = text;
                 SettingManager.setConfig<String>(SettingName.weatherCity, text.trim());
+                _initData();
               }
-              _initData();
             },
           ),
           ListTile(
@@ -56,22 +56,21 @@ class _SettingPageState extends State<SettingPage> {
             trailing: Icon(Icons.chevron_right),
             onTap: () async {
               String? text = await Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => _TextSettingPage(appbarTitle: "Apikey",),
+                builder: (context) => _TextSettingPage(appbarTitle: "Apikey", text: globalSetting.weatherApiKey,),
               ));
               print(text);
               if (text != null && text != globalSetting.weatherApiKey) {
+                globalSetting.weatherApiKey = text;
                 SettingManager.setConfig<String>(SettingName.openWeatherApikey, text.trim());
+                _initData();
               }
-              _initData();
             },
           ),
           ListTile(
             title: Text("强制更新天气"),
             subtitle: Text("自打开App已请求接口 ${globalSetting.weatherActiveFlushApiCount} 次"),
             onTap: () async {
-              await SettingManager.flushWeatherInfo(false);
               _initData();
-
             },
           )
         ],
@@ -82,9 +81,10 @@ class _SettingPageState extends State<SettingPage> {
 }
 
 class _TextSettingPage extends StatefulWidget {
-  const _TextSettingPage({super.key, this.appbarTitle = ""});
+  _TextSettingPage({super.key, this.appbarTitle = "", this.text});
 
   final String appbarTitle;
+  String? text;
 
   @override
   State<StatefulWidget> createState() => _TextSettingPageState();
@@ -95,9 +95,13 @@ class _TextSettingPageState extends State<_TextSettingPage> {
 
   String? text;
 
+  TextEditingController? _controller;
+
   @override
   void initState() {
     super.initState();
+    _controller = TextEditingController.fromValue(TextEditingValue(text: widget.text ?? ""));
+    setState(() {});
   }
 
   @override
@@ -124,6 +128,7 @@ class _TextSettingPageState extends State<_TextSettingPage> {
         padding: EdgeInsets.symmetric(horizontal: 12),
         children: [
           TextField(
+            controller: _controller,
             onChanged: (value) {
               text = value;
             },

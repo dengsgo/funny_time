@@ -28,11 +28,6 @@ class PositionViewState<T extends StatefulWidget> extends State<T> {
     print("_screenSize ${MediaQuery.of(context).size}");
   }
 
-  double _kRealActiveZoneHeight(Size size) {
-    int kAppbarHeight = MediaQuery.orientationOf(context) == Orientation.portrait ? 56 : 0;
-    return size.height - kAppbarHeight;
-  }
-
   _centerWidget() {
     if (globalSetting.sharedTimeViewSize == null) {
       return;
@@ -83,7 +78,9 @@ class PositionViewState<T extends StatefulWidget> extends State<T> {
       globalSetting.sharedTimeViewSize = renderBox?.paintBounds.size;
       widgetSize = globalSetting.sharedTimeViewSize!;
       _screenSize = MediaQuery.sizeOf(context);
+      // print("MediaQuery.sizeOf(context) ${MediaQuery.sizeOf(context)}");
       globalSetting.sharedScreenSize = _screenSize; // 贡献给 global
+      // print("globalSetting.sharedScreenSize ${globalSetting.sharedScreenSize}");
       var xStep = Random.secure().nextInt(globalSetting.stepRandomMaxValue);
       var yStep = Random.secure().nextInt(globalSetting.stepRandomMaxValue);
       double left = positionMargin.left;
@@ -95,6 +92,7 @@ class PositionViewState<T extends StatefulWidget> extends State<T> {
         top: isPortrait ? positionPaddingHeight : 0.0,
         bottom: isPortrait ? _screenSize.height - positionPaddingHeight : _screenSize.height,
       );
+      // print("containerPadding ${containerPadding.left},${containerPadding.top},${containerPadding.right},${containerPadding.bottom}");
       // x-axis
       if (_xOffsetReverse) {
         if (left - xStep > containerPadding.left) {
@@ -104,10 +102,10 @@ class PositionViewState<T extends StatefulWidget> extends State<T> {
           _xOffsetReverse = false;
         }
       } else {
-        if (left + xStep + widgetSize.width < containerPadding.right) {
+        if (left + xStep + widgetSize.width < containerPadding.right - globalSetting.stepRandomMaxValue) {
           left += xStep;
         } else {
-          left = containerPadding.right - widgetSize.width;
+          left = containerPadding.right - widgetSize.width - globalSetting.stepRandomMaxValue;
           _xOffsetReverse = true;
         }
       }
@@ -120,24 +118,27 @@ class PositionViewState<T extends StatefulWidget> extends State<T> {
           _yOffsetReverse = false;
         }
       } else {
-        if (top + yStep + widgetSize.height < containerPadding.bottom) {
+        if (top + yStep + widgetSize.height < containerPadding.bottom - globalSetting.stepRandomMaxValue) {
           top += yStep;
         } else {
-          top = containerPadding.bottom - widgetSize.height;
+          top = containerPadding.bottom - widgetSize.height - globalSetting.stepRandomMaxValue;
           _yOffsetReverse = true;
         }
       }
       // 如果出现显示异常，做最后的修正
-      if (left + widgetSize.width > containerPadding.right) {
-        left = containerPadding.right - widgetSize.width;
+      if (left + widgetSize.width >= containerPadding.right) {
+        return _centerWidget();
       }
-      if (top + widgetSize.height > containerPadding.bottom) {
-        top = containerPadding.bottom - widgetSize.height;
+      if (top + widgetSize.height >= containerPadding.bottom) {
+        return _centerWidget();
       }
       positionMargin = EdgeInsets.only(
           left: left,
           top: top
       );
+      // print("left + widgetSize.width > containerPadding.right ${left + widgetSize.width >= containerPadding.right}");
+      // print("top + widgetSize.height > containerPadding.bottom ${top + widgetSize.height >= containerPadding.bottom}");
+      // print("positionMargin $positionMargin");
       setState(() {}); // 更新
     };
   }

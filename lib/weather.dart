@@ -39,6 +39,11 @@ class Temperature {
   final double feelsLike;
   final double humidity;
 
+  get humidityInt => humidity.toInt();
+  get feelsLikeInt => feelsLike.toInt();
+  get tempInt => temp.toInt();
+  get tempRound => temp.toStringAsFixed(1);
+
   @override
   String toString() {
     return '{"temp": $temp, "feels_like": $feelsLike, "humidity": $humidity}';
