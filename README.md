@@ -8,6 +8,19 @@ A full-screen time display software, similar to the effect of always on display 
 It is especially suitable for OLED and Amoled screens to be always on.  
 Developed using Flutter technology, theoretically supporting all platforms (Web, Android, iOS, etc.), and Web and iOS have been tested.  
 
+## Feature   
+
+- 多种时间部件风格样式，内置多种字体，所见即所得。支持样式/字体/颜色/大小自定义组合  
+- 全局多彩文字  
+- 支持显示天气、气温，适配多种部件样式  
+- AOD 常亮显示，全黑背景，内建防“烧屏”机制，对 OLED 屏幕友好  
+- 低功耗优化，适合老旧机型全天候使用  
+- 十档亮度调节  
+- 自定义时段自动调整亮度（TODO）  
+- 代办事项提醒、代办小部件 （TODO）  
+- 时间倒计时 （TODO）  
+
+
 ## Usage 
 
 打开 App, 会默认全屏显示一个时间组件，屏幕背景为全黑（#FF000000）。  
