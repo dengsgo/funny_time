@@ -99,7 +99,9 @@ Future<List<WeatherInfo>> fetchOpenWeatherApi(String city, String apikey) async 
   );
   List<WeatherInfo> list = [];
   try {
-    var response = await http.get(url).timeout(Duration(seconds: 15));
+    var response = await http.get(
+        url, headers: {"user-agent": "Funny Time App, 1.1, Flutter_Dart, Open Source ( https://github.com/dengsgo/funny_time )"},
+    ).timeout(Duration(seconds: 15));
     var json = jsonDecode(response.body);
     if (json is Map<String, dynamic> && json['list'] is List) {
       for (Map<String, dynamic> m in (json['list'] as List)) {
