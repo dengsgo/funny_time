@@ -37,7 +37,7 @@ class Temperature {
 
   final double temp;
   final double feelsLike;
-  final double humidity;
+  final num humidity;
 
   get humidityInt => humidity.toInt();
   get feelsLikeInt => feelsLike.toInt();
