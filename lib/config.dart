@@ -180,6 +180,30 @@ class SettingConfigure {
       Colors.orange,
       Colors.green,
     ],
+    [
+      Colors.red,
+      Colors.orange,
+      Colors.lightBlue,
+      Colors.green,
+    ],
+    [
+      Colors.green,
+      Colors.redAccent,
+      Colors.cyan,
+      Colors.orange,
+    ],
+    [
+      Colors.redAccent,
+      Colors.deepPurpleAccent,
+      Colors.greenAccent,
+      Colors.pinkAccent,
+    ],
+    [
+      Colors.yellow,
+      Colors.greenAccent,
+      Colors.pinkAccent,
+      Colors.cyan,
+    ],
   ];
 
   // 获取openweather天气图标对应表
