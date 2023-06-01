@@ -33,7 +33,7 @@ class _TimePageState extends State<TimePage> {
       backgroundColor: Colors.black,
       body: OrientationBuilder(
         builder: (context, orientation) {
-          print("OrientationBuilder $orientation ${MediaQuery.sizeOf(context)}");
+          // print("OrientationBuilder $orientation ${MediaQuery.sizeOf(context)}");
           globalSetting.sharedScreenSize = MediaQuery.sizeOf(context);
           return PositionView(tapCallback: tapTimeViewHandler,);
         },
