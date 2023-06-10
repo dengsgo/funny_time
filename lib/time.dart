@@ -65,7 +65,7 @@ class _TimePageState extends State<TimePage> {
             }, icon: Icon(Icons.font_download_outlined), tooltip: "换字体",),
             IconButton(onPressed: (){
               int index = globalSetting.textColorsPaintIndex;
-              if (++index >= globalSetting.paintLinearColorsMap.length) {
+              if (++index >= paintLinearColorsMap.length) {
                 index = 0;
               }
               globalSetting.textColorsPaintIndex = index;
@@ -251,7 +251,7 @@ class _WeatherViewState extends State<WeatherView> {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Icon(globalSetting.weatherIconDataMap[globalSetting.weatherInfo.weather.icon] ?? WeatherIcons.unknown, size: 14 * globalSetting.timeFontSizeScale,),
+              Icon(weatherIconDataMap[globalSetting.weatherInfo.weather.icon] ?? WeatherIcons.unknown, size: 14 * globalSetting.timeFontSizeScale,),
               TextUseSetting("${globalSetting.weatherInfo.weather.description}", style: textTheme,),
               TextUseSetting("${_formatNumber(datetime.hour)}:${_formatNumber(datetime.minute)}", style: textTheme,),
             ],
@@ -388,7 +388,7 @@ class _TimeBlockViewState extends State<TimeBlockView> {
   }
 
   Widget _weatherStyle1Widget() {
-    return Icon(globalSetting.weatherIconDataMap[globalSetting.weatherInfo.weather.icon] ?? WeatherIcons.unknown,
+    return Icon(weatherIconDataMap[globalSetting.weatherInfo.weather.icon] ?? WeatherIcons.unknown,
       size: 40 * globalSetting.timeFontSizeScale, color: Colors.white.withOpacity(0.9),);
   }
 
@@ -526,7 +526,7 @@ class _DateTimeViewState extends State<DateTimeView> {
                     fontFamily: globalSetting.fontFamily.name
                 ),),
                 Expanded(child: Text("")),
-                Text(globalSetting.weekdayMapping[datetime.weekday]??""),
+                Text(weekdayMapping[datetime.weekday]??""),
               ],
             ),
           )
@@ -644,7 +644,7 @@ class _SecondIncludeTextComponent extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(globalSetting.hourMapping[hour]??""),
+        Text(hourMapping[hour]??""),
         _SecondComponent(number: number)
       ],
     );

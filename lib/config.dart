@@ -108,134 +108,13 @@ class SettingConfigure {
   // 获取亮度值
   get appScreenBrightnessValue => _appScreenBrightnessValue;
 
-  // 星期文字对应表
-  Map<int, String> get weekdayMapping => const {
-    1: "星期一",
-    2: "星期二",
-    3: "星期三",
-    4: "星期四",
-    5: "星期五",
-    6: "星期六",
-    7: "星期日",
-  };
-
-  // 小时文字对应表
-  Map<int, String> get hourMapping => const {
-    23: "深夜",
-    0: "深夜",
-    1: "深夜",
-    2: "深夜",
-    3: "深夜",
-    4: "深夜",
-    5: "清晨",
-    6: "清晨",
-    7: "早上",
-    8: "早上",
-    9: "上午",
-    10: "上午",
-    11: "上午",
-    12: "中午",
-    13: "午后",
-    14: "下午",
-    15: "下午",
-    16: "下午",
-    17: "傍晚",
-    18: "晚上",
-    19: "晚上",
-    20: "晚上",
-    21: "入夜",
-    22: "入夜",
-  };
-
-  // 渐变颜色表
-  List<List<Color>> get paintLinearColorsMap => const [
-    [], // 0 default = null
-    [
-      Colors.blue,
-      Colors.green,
-      Colors.deepPurpleAccent,
-      Colors.purpleAccent
-    ],
-    [
-      Colors.deepPurpleAccent,
-      Colors.purpleAccent,
-      Colors.blue,
-      Colors.green,
-    ],
-    [
-      Colors.deepPurpleAccent,
-      Colors.blue,
-      Colors.lightBlue,
-      Colors.green,
-      Colors.yellow,
-      Colors.orange,
-      Colors.red,
-    ],
-    [
-      Colors.orange,
-      Colors.redAccent,
-      Colors.red,
-      Colors.lightBlue,
-      Colors.deepPurpleAccent,
-      Colors.orange,
-      Colors.green,
-    ],
-    [
-      Colors.red,
-      Colors.orange,
-      Colors.lightBlue,
-      Colors.green,
-    ],
-    [
-      Colors.green,
-      Colors.redAccent,
-      Colors.cyan,
-      Colors.orange,
-    ],
-    [
-      Colors.redAccent,
-      Colors.deepPurpleAccent,
-      Colors.greenAccent,
-      Colors.pinkAccent,
-    ],
-    [
-      Colors.yellow,
-      Colors.greenAccent,
-      Colors.pinkAccent,
-      Colors.cyan,
-    ],
-  ];
-
-  // 获取openweather天气图标对应表
-  Map<String, IconData> get weatherIconDataMap => const {
-    "01d": WeatherIcons.sunny,
-    "02d": WeatherIcons.cloudy,
-    "03d": WeatherIcons.overcast,
-    "04d": WeatherIcons.overcast,
-    "09d": WeatherIcons.showerRain,
-    "10d": WeatherIcons.rain,
-    "11d": WeatherIcons.thunderstorm,
-    "13d": WeatherIcons.snow,
-    "50d": WeatherIcons.fog,
-
-    "01n": WeatherIcons.sunny,
-    "02n": WeatherIcons.cloudy,
-    "03n": WeatherIcons.overcast,
-    "04n": WeatherIcons.overcast,
-    "09n": WeatherIcons.showerRain,
-    "10n": WeatherIcons.rain,
-    "11n": WeatherIcons.thunderstorm,
-    "13n": WeatherIcons.snow,
-    "50n": WeatherIcons.fog,
-  };
-
   Paint? timeTextPaint(int index) {
     if (globalSetting.textColorsPaintIndex == 0
-        || index >= globalSetting.paintLinearColorsMap.length) {
+        || index >= paintLinearColorsMap.length) {
       return null;
     }
     return Paint()..shader = LinearGradient(
-        colors: globalSetting.paintLinearColorsMap[index]
+        colors: paintLinearColorsMap[index]
     ).createShader(Rect.fromLTRB(
       0, 0,
       globalSetting.sharedScreenSize?.width??400,
@@ -377,4 +256,127 @@ void wakeLockDisable() {
 }
 
 // weather icons
+
+// global
+
+// 星期文字对应表
+final Map<int, String> weekdayMapping = {
+  1: "星期一",
+  2: "星期二",
+  3: "星期三",
+  4: "星期四",
+  5: "星期五",
+  6: "星期六",
+  7: "星期日",
+};
+
+// 小时文字对应表
+const Map<int, String> hourMapping = {
+  23: "深夜",
+  0: "深夜",
+  1: "深夜",
+  2: "深夜",
+  3: "深夜",
+  4: "深夜",
+  5: "清晨",
+  6: "清晨",
+  7: "早上",
+  8: "早上",
+  9: "上午",
+  10: "上午",
+  11: "上午",
+  12: "中午",
+  13: "午后",
+  14: "下午",
+  15: "下午",
+  16: "下午",
+  17: "傍晚",
+  18: "晚上",
+  19: "晚上",
+  20: "晚上",
+  21: "入夜",
+  22: "入夜",
+};
+
+// 获取openweather天气图标对应表
+const Map<String, IconData> weatherIconDataMap = {
+  "01d": WeatherIcons.sunny,
+  "02d": WeatherIcons.cloudy,
+  "03d": WeatherIcons.overcast,
+  "04d": WeatherIcons.overcast,
+  "09d": WeatherIcons.showerRain,
+  "10d": WeatherIcons.rain,
+  "11d": WeatherIcons.thunderstorm,
+  "13d": WeatherIcons.snow,
+  "50d": WeatherIcons.fog,
+
+  "01n": WeatherIcons.sunny,
+  "02n": WeatherIcons.cloudy,
+  "03n": WeatherIcons.overcast,
+  "04n": WeatherIcons.overcast,
+  "09n": WeatherIcons.showerRain,
+  "10n": WeatherIcons.rain,
+  "11n": WeatherIcons.thunderstorm,
+  "13n": WeatherIcons.snow,
+  "50n": WeatherIcons.fog,
+};
+
+// 渐变颜色表
+const List<List<Color>> paintLinearColorsMap = [
+  [], // 0 default = null
+  [
+    Colors.blue,
+    Colors.green,
+    Colors.deepPurpleAccent,
+    Colors.purpleAccent
+  ],
+  [
+    Colors.deepPurpleAccent,
+    Colors.purpleAccent,
+    Colors.blue,
+    Colors.green,
+  ],
+  [
+    Colors.deepPurpleAccent,
+    Colors.blue,
+    Colors.lightBlue,
+    Colors.green,
+    Colors.yellow,
+    Colors.orange,
+    Colors.red,
+  ],
+  [
+    Colors.orange,
+    Colors.redAccent,
+    Colors.red,
+    Colors.lightBlue,
+    Colors.deepPurpleAccent,
+    Colors.orange,
+    Colors.green,
+  ],
+  [
+    Colors.red,
+    Colors.orange,
+    Colors.lightBlue,
+    Colors.green,
+  ],
+  [
+    Colors.green,
+    Colors.redAccent,
+    Colors.cyan,
+    Colors.orange,
+  ],
+  [
+    Colors.redAccent,
+    Colors.deepPurpleAccent,
+    Colors.greenAccent,
+    Colors.pinkAccent,
+  ],
+  [
+    Colors.yellow,
+    Colors.greenAccent,
+    Colors.pinkAccent,
+    Colors.cyan,
+  ],
+];
 
