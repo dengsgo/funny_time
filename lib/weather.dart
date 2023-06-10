@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:funny_time/icons.dart';
+import 'package:funny_time/store.dart';
 import 'package:http/http.dart' as http;
 
 class Weather {
@@ -82,7 +83,17 @@ class WeatherInfo {
 
   @override
   String toString() {
-    return '{"dt":$dt, "main": ${temp}, "weather": [$weather]}';
+    return '{"dt":$dt, "main": $temp, "weather": [$weather]}';
+  }
+
+  factory WeatherInfo.loadLocal() {
+    var weatherStrInfo = getConfig<String>(SettingName.weatherInfo);
+    print(weatherStrInfo);
+    return WeatherInfo.fromJsonStr(weatherStrInfo);
+  }
+
+  void storeLocal() {
+    setConfig<String>(SettingName.weatherInfo, toString());
   }
 }
 

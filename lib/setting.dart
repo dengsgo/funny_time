@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:funny_time/config.dart';
+import 'package:funny_time/store.dart';
 import 'package:funny_time/time.dart';
 
 class SettingPage extends StatefulWidget {
@@ -36,32 +37,32 @@ class _SettingPageState extends State<SettingPage> {
           ListTile(title: Text("天气", style: Theme.of(context).textTheme.titleLarge,),),
           ListTile(
             title: Text("城市/地区"),
-            subtitle: globalSetting.weatherCity == null ? null : Text(globalSetting.weatherCity!),
+            subtitle: globalSetting.weatherSet.city == null ? null : Text(globalSetting.weatherSet.city!),
             trailing: Icon(Icons.chevron_right),
             onTap: () async {
               String? text = await Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => _TextSettingPage(appbarTitle: "City, 如 Shanghai", text: globalSetting.weatherCity,),
+                builder: (context) => _TextSettingPage(appbarTitle: "City, 如 Shanghai", text: globalSetting.weatherSet.city,),
               ));
               print(text);
-              if (text != null && text != globalSetting.weatherCity) {
-                globalSetting.weatherCity = text;
-                SettingManager.setConfig<String>(SettingName.weatherCity, text.trim());
+              if (text != null && text != globalSetting.weatherSet.city) {
+                globalSetting.weatherSet.city = text.trim();
+                globalSetting.weatherSet.storeLocal();
                 _initData();
               }
             },
           ),
           ListTile(
             title: Text("接口Key (OpenWeather Apikey)"),
-            subtitle: globalSetting.weatherApiKey == null ? null : Text(globalSetting.weatherApiKey!),
+            subtitle: globalSetting.weatherSet.apikey == null ? null : Text(globalSetting.weatherSet.apikey!),
             trailing: Icon(Icons.chevron_right),
             onTap: () async {
               String? text = await Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => _TextSettingPage(appbarTitle: "Apikey", text: globalSetting.weatherApiKey,),
+                builder: (context) => _TextSettingPage(appbarTitle: "Apikey", text: globalSetting.weatherSet.apikey,),
               ));
               print(text);
-              if (text != null && text != globalSetting.weatherApiKey) {
-                globalSetting.weatherApiKey = text;
-                SettingManager.setConfig<String>(SettingName.openWeatherApikey, text.trim());
+              if (text != null && text != globalSetting.weatherSet.apikey) {
+                globalSetting.weatherSet.apikey = text.trim();
+                globalSetting.weatherSet.storeLocal();
                 _initData();
               }
             },

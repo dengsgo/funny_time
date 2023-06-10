@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:funny_time/icons.dart';
+import 'package:funny_time/store.dart';
 import 'package:funny_time/weather.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -60,11 +62,10 @@ class SettingConfigure {
     this.sharedScreenSize,
     this.textColorsPaintIndex = 3,
     double appScreenBrightnessValue = -1,
-    this.weatherCity,
-    this.weatherApiKey,
-    this.weatherLastUpdateTime = 0,
     this.weatherInfo = const WeatherInfo(0, Temperature(0, 0, 0), Weather('', '', 0, '')),
-}) : _appScreenBrightnessValue = appScreenBrightnessValue;
+}) : _appScreenBrightnessValue = appScreenBrightnessValue,
+  weatherLastUpdateTime = WeatherLastUpdateTime(),
+        weatherSet = WeatherSet();
 
   // 当前的样式
   DisplayStyle displayStyle;
@@ -83,9 +84,8 @@ class SettingConfigure {
 
   // 天气显示设置
   WeatherInfo weatherInfo;
-  String? weatherCity;
-  String? weatherApiKey;
-  int weatherLastUpdateTime;
+  WeatherSet weatherSet;
+  WeatherLastUpdateTime weatherLastUpdateTime;
   int weatherActiveFlushApiCount = 0;
 
   // 屏幕尺寸共享
@@ -122,14 +122,6 @@ class SettingConfigure {
   }
 }
 
-enum SettingName {
-  weatherInfo,
-  weatherCity,
-  openWeatherApikey,
-  weatherLastUpdateTime,
-  ;
-}
-
 class SettingManager {
 
   static VoidCallback? _metricsChangeCallback;
@@ -142,15 +134,12 @@ class SettingManager {
       globalSetting.appScreenBrightnessValue = await currentBrightness;
     }
     // Obtain shared preferences.
-    globalSetting.localStore = await SharedPreferences.getInstance();
+    localStore = await SharedPreferences.getInstance();
     callback();
     // load weather
-    var weatherStrInfo = getConfig<String>(SettingName.weatherInfo);
-    print(weatherStrInfo);
-    globalSetting.weatherInfo = WeatherInfo.fromJsonStr(weatherStrInfo);
-    globalSetting.weatherCity = getConfig<String>(SettingName.weatherCity);
-    globalSetting.weatherApiKey = getConfig<String>(SettingName.openWeatherApikey);
-    globalSetting.weatherLastUpdateTime = getConfig<int>(SettingName.weatherLastUpdateTime) ?? 0;
+    globalSetting.weatherInfo = WeatherInfo.loadLocal();
+    globalSetting.weatherSet = WeatherSet.loadLocal();
+    globalSetting.weatherLastUpdateTime = WeatherLastUpdateTime.loadLocal();
     print(globalSetting.weatherInfo);
     if (globalSetting.weatherInfo.weather.icon == '') {
       await flushWeatherInfo(false);
@@ -161,23 +150,23 @@ class SettingManager {
   // 刷新天气信息
   static flushWeatherInfo([bool useCache = true]) async {
     print("flushWeatherInfo in");
-    if (globalSetting.weatherApiKey == null || globalSetting.weatherCity == null) {
+    if (globalSetting.weatherSet.apikey == null || globalSetting.weatherSet.city == null) {
       globalSetting.weatherInfo = const WeatherInfo(0, Temperature(0, 0, 0), Weather('', 'fail', 0, ''));
       return ;
     }
     print("flushWeatherInfo exec");
     // half an hour update once at most
-    if (!useCache || DateTime.now().millisecondsSinceEpoch - globalSetting.weatherLastUpdateTime > 1000 * 60 * 30) {
-      globalSetting.weatherLastUpdateTime = DateTime.now().millisecondsSinceEpoch;
-      final weatherList = await fetchOpenWeatherApi(globalSetting.weatherCity!, globalSetting.weatherApiKey!);
+    if (!useCache || DateTime.now().millisecondsSinceEpoch - globalSetting.weatherLastUpdateTime.value > 1000 * 60 * 30) {
+      globalSetting.weatherLastUpdateTime.value = DateTime.now().millisecondsSinceEpoch;
+      final weatherList = await fetchOpenWeatherApi(globalSetting.weatherSet.city!, globalSetting.weatherSet.apikey!);
       print("weatherList");
       print(weatherList);
       if (weatherList.length > 0) {
         globalSetting.weatherInfo = getCurrentWeatherInfo(weatherList);
-        setConfig<String>(SettingName.weatherInfo, globalSetting.weatherInfo.toString());
+        globalSetting.weatherInfo.storeLocal();
+        globalSetting.weatherLastUpdateTime.storeLocal();
         print("save");
         print(globalSetting.weatherInfo.toString());
-        setConfig<int>(SettingName.weatherLastUpdateTime, globalSetting.weatherLastUpdateTime);
         globalSetting.weatherActiveFlushApiCount++;
       }
     }
@@ -192,29 +181,6 @@ class SettingManager {
       _metricsChangeCallback!();
     }
   }
-
-  static T? getConfig<T extends Object>(SettingName key) {
-    var value = globalSetting.localStore.get(key.name);
-    if (value == null) {
-      return null;
-    }
-    return value as T;
-  }
-  static void setConfig<T extends Object>(SettingName key, T value) {
-    switch (T) {
-      case int:
-        globalSetting.localStore.setInt(key.name, value as int);
-      case bool:
-        globalSetting.localStore.setBool(key.name, value as bool);
-      case double:
-        globalSetting.localStore.setDouble(key.name, value as double);
-      case String:
-        globalSetting.localStore.setString(key.name, value as String);
-      case List:
-        globalSetting.localStore.setStringList(key.name, value as List<String>);
-    }
-  }
-
 
 }
 
