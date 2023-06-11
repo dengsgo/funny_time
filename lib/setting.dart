@@ -160,6 +160,7 @@ class _SettingPageState extends State<SettingPage> {
               ),
             ],
           ),
+          Padding(padding: EdgeInsets.all(48), child: Text("到底部啦", style: styleLarge?.copyWith(color: Colors.white24), textAlign: TextAlign.center,),)
         ],
       ),
     );
