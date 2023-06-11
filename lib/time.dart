@@ -72,11 +72,11 @@ class _TimePageState extends State<TimePage> {
               setState(() {});
             }, icon: Icon(Icons.color_lens_outlined), tooltip: "换渐变色",),
             IconButton(onPressed: (){
-              globalSetting.appScreenBrightnessValue += 0.1;
+              globalSetting.appScreenBrightnessValue += 0.05;
               setState(() {});
             }, icon: Icon(Icons.wb_twilight_rounded), tooltip: "增亮",),
             IconButton(onPressed: (){
-              globalSetting.appScreenBrightnessValue -= 0.1;
+              globalSetting.appScreenBrightnessValue -= 0.05;
               setState(() {});
             }, icon: Icon(Icons.nightlight_outlined), tooltip: "减亮",),
             IconButton(onPressed: (){

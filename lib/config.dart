@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
@@ -65,7 +66,8 @@ class SettingConfigure {
     this.weatherInfo = const WeatherInfo(0, Temperature(0, 0, 0), Weather('', '', 0, '')),
 }) : _appScreenBrightnessValue = appScreenBrightnessValue,
   weatherLastUpdateTime = WeatherLastUpdateTime(),
-        weatherSet = WeatherSet();
+        weatherSet = WeatherSet(),
+        autoSet = AutoSet();
 
   // 当前的样式
   DisplayStyle displayStyle;
@@ -87,6 +89,9 @@ class SettingConfigure {
   WeatherSet weatherSet;
   WeatherLastUpdateTime weatherLastUpdateTime;
   int weatherActiveFlushApiCount = 0;
+
+  // 自动化设置
+  AutoSet autoSet;
 
   // 屏幕尺寸共享
   Size? sharedScreenSize;
@@ -140,11 +145,15 @@ class SettingManager {
     globalSetting.weatherInfo = WeatherInfo.loadLocal();
     globalSetting.weatherSet = WeatherSet.loadLocal();
     globalSetting.weatherLastUpdateTime = WeatherLastUpdateTime.loadLocal();
+    globalSetting.autoSet = AutoSet.loadLocal();
     print(globalSetting.weatherInfo);
     if (globalSetting.weatherInfo.weather.icon == '') {
       await flushWeatherInfo(false);
     }
     await flushWeatherInfo();
+
+    _autoBrightness();
+    _autoJob();
   }
 
   // 刷新天气信息
@@ -170,6 +179,37 @@ class SettingManager {
         globalSetting.weatherActiveFlushApiCount++;
       }
     }
+  }
+
+  static void _autoJob() {
+    Timer.periodic(const Duration(minutes: 1), (timer) async {
+      _autoBrightness();
+    });
+  }
+
+  static void _autoBrightness() async {
+    print("_autoBrightness start");
+    final autoSet = globalSetting.autoSet;
+    var nowBV = await currentBrightness;
+    if (nowBV < 0) {
+      nowBV = 0.1;
+    }
+    final nowBVP = (nowBV * 100).toInt();
+    if (autoSet.lowBrightnessTimeSlot == null
+        || autoSet.lowBrightnessTimeSlot!.isEmpty
+        || ! autoSet.lowBrightnessTimeSlot!.contains(DateTime.now().hour)) {
+      if (globalSetting.appScreenBrightnessValue != nowBV) {
+        globalSetting.appScreenBrightnessValue = globalSetting.appScreenBrightnessValue;
+        print("_autoBrightness brightness back normal");
+      } else {
+        print("_autoBrightness nothing todo");
+      }
+      return ;
+    }
+    if (nowBVP != autoSet.lowBrightnessValue) {
+      await setBrightness(autoSet.lowBrightnessValue / 100);
+    }
+    print("_autoBrightness done");
   }
 
   static void addMetricsChangeCallback(VoidCallback callback) {

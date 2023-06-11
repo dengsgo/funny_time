@@ -6,6 +6,7 @@ enum SettingName {
   weatherInfo,
   weatherLastUpdateTime,
   weatherSet,
+  autoSet,
   ;
 }
 
@@ -95,5 +96,52 @@ class WeatherLastUpdateTime {
 
   void storeLocal() {
     setConfig<int>(SettingName.weatherLastUpdateTime, value);
+  }
+}
+
+class AutoSet {
+  AutoSet({this.lowBrightnessTimeSlot, this.lowBrightnessValue = 10});
+
+  List<int>? lowBrightnessTimeSlot; // 低亮度时间段
+  int lowBrightnessValue;
+
+  factory AutoSet.fromJsonMap(Map<String, dynamic> map) {
+    return AutoSet(
+      lowBrightnessTimeSlot: List<int>.from(map['lowBrightnessTimeSlot']),
+      lowBrightnessValue: map['lowBrightnessValue'] as int,
+    );
+  }
+
+  factory AutoSet.fromJsonStr(String? str) {
+    try {
+      var map = jsonDecode(str!);
+      return AutoSet.fromJsonMap(map);
+    } catch (e) {
+      print("AutoSet.fromJsonStr jsonDecode fail {$e}");
+    }
+    return AutoSet();
+  }
+
+  factory AutoSet.loadLocal() {
+    var store = getConfig<String>(SettingName.autoSet);
+    print(store);
+    return AutoSet.fromJsonStr(store);
+  }
+
+  void storeLocal() {
+    print(toString());
+    setConfig<String>(SettingName.autoSet, toString());
+  }
+
+  Map toMap() {
+    return {
+      "lowBrightnessTimeSlot": lowBrightnessTimeSlot,
+      "lowBrightnessValue": lowBrightnessValue,
+    };
+  }
+
+  @override
+  String toString() {
+    return jsonEncode(toMap());
   }
 }

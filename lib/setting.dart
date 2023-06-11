@@ -22,19 +22,23 @@ class _SettingPageState extends State<SettingPage> {
 
   _initData() {
     SettingManager.flushWeatherInfo(false);
+    _render();
+  }
+
+  _render() {
     if (mounted) {
-      setState(() {
-      });
+      setState(() {});
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final styleLarge = Theme.of(context).textTheme.titleLarge;
     return Scaffold(
       appBar: AppBar(title: Text("Setting"),),
       body: ListView(
         children: [
-          ListTile(title: Text("天气", style: Theme.of(context).textTheme.titleLarge,),),
+          ListTile(title: Text("天气", style: styleLarge,),),
           ListTile(
             title: Text("城市/地区"),
             subtitle: globalSetting.weatherSet.city == null ? null : Text(globalSetting.weatherSet.city!),
@@ -73,12 +77,89 @@ class _SettingPageState extends State<SettingPage> {
             onTap: () async {
               _initData();
             },
-          )
+          ),
+          Divider(),
+          ListTile(title: Text("自动化", style: styleLarge,),),
+          ListTile(
+            title: Text("低亮度 (${globalSetting.autoSet.lowBrightnessValue})"),
+            subtitle: Slider(
+              value: globalSetting.autoSet.lowBrightnessValue.toDouble(),
+              min: 5,
+              max: 100,
+              divisions: 100,
+              label: "${globalSetting.autoSet.lowBrightnessValue}",
+              onChanged: (v) {
+                if (v.toInt() == globalSetting.autoSet.lowBrightnessValue) {
+                  return;
+                }
+                globalSetting.autoSet.lowBrightnessValue = v.toInt();
+                _render();
+                globalSetting.autoSet.storeLocal();
+              },
+            ),
+          ),
+          ListTile(
+            title: Text("低亮度时间段"),
+            subtitle: Column(
+              mainAxisSize: MainAxisSize.min,
+              children:_timeSlots(),
+            ),
+          ),
+          ListTile(
+            title: Text(
+                (){
+                  double v = globalSetting.appScreenBrightnessValue < 0 ? 0 : globalSetting.appScreenBrightnessValue * 100;
+                  return "常规亮度 (${v.toInt()})";
+                }()
+            ),
+            subtitle: Slider(
+              value: globalSetting.appScreenBrightnessValue < 0 ? 0 : globalSetting.appScreenBrightnessValue,
+              min: 0,
+              max: 1,
+              label: "${globalSetting.appScreenBrightnessValue}",
+              onChanged: (v) {
+                if (v.toInt() == globalSetting.appScreenBrightnessValue) {
+                  return;
+                }
+                globalSetting.appScreenBrightnessValue = v;
+                _render();
+              },
+            ),
+          ),
         ],
       ),
     );
   }
-  
+
+  _timeSlots() {
+    final iconColor = IconTheme.of(context).color?.withOpacity(0.2);
+    List<SegmentedButton> buttons = [];
+    for (var i in [0,1,2,3]) {
+      buttons.add(SegmentedButton<int>(
+        multiSelectionEnabled: true,
+        emptySelectionAllowed: true,
+        segments: List.generate(6, (index) {
+          final v = i*6 + index;
+          return ButtonSegment(
+            value: v,
+            icon: Icon(Icons.remove, color: iconColor,),
+            label: Text(v > 9 ? "$v" : "0$v"),
+            enabled: true,
+          );
+        }),
+        selected: globalSetting.autoSet.lowBrightnessTimeSlot?.toSet() ?? {},
+        onSelectionChanged: (Set<int>? s) {
+          var old = globalSetting.autoSet.lowBrightnessTimeSlot?.toSet() ?? {};
+          print(old);
+          globalSetting.autoSet.lowBrightnessTimeSlot = s?.toList();
+          print(globalSetting.autoSet.lowBrightnessTimeSlot);
+          _render();
+          globalSetting.autoSet.storeLocal();
+        },
+      ));
+    }
+    return buttons;
+  }
 }
 
 class _TextSettingPage extends StatefulWidget {
@@ -121,7 +202,7 @@ class _TextSettingPageState extends State<_TextSettingPage> {
               onPressed: () {
                 Navigator.pop(context, text);
               },
-              icon: Icon(Icons.save)
+              icon: Icon(Icons.done)
           )
         ],
       ),
