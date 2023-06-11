@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:funny_time/config.dart';
-import 'package:funny_time/store.dart';
-import 'package:funny_time/time.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -38,6 +36,7 @@ class _SettingPageState extends State<SettingPage> {
       appBar: AppBar(title: Text("Setting"),),
       body: ListView(
         children: [
+          _copyright(),
           ListTile(title: Text("天气", style: styleLarge,),),
           ListTile(
             title: Text("城市/地区"),
@@ -126,8 +125,77 @@ class _SettingPageState extends State<SettingPage> {
               },
             ),
           ),
+
+          Divider(),
+          ListTile(title: Text("开源公示", style: styleLarge,),),
+          ListTile(
+            title: Text("Project"),
+            subtitle: Text("https://github.com/dengsgo/funny_time"),
+          ),
+          ListTile(
+            title: Text("MIT License"),
+            subtitle: Text("https://github.com/dengsgo/funny_time/blob/master/LICENSE"),
+          ),
+          ListTile(
+            title: Text("贡献代码"),
+            subtitle: Text("https://github.com/dengsgo/funny_time/fock"),
+          ),
+          ListTile(
+            title: Text("捐赠开发者"),
+            subtitle: Text("感谢你的支持，以维持开源软件的更新！"),
+          ),
+          Row(
+            children: [
+              Flexible(
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 8, 16),
+                  child: Image.asset("doc/qrcode/alipay.png",),
+                ),
+              ),
+              Flexible(
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(8, 16, 16, 16),
+                  child: Image.asset("doc/qrcode/wxpay.png",),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
+    );
+  }
+
+  _copyright() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(height: 24,),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            FlutterLogo(size: 82,),
+            SizedBox(
+              width: 12,
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Funny Time", style: Theme.of(context).textTheme.headlineSmall,),
+                Text("版本: 1.0.1"),
+                Text("A Cool Time Open-Source Display App !"),
+              ],
+            ),
+          ],
+        ),
+        Padding(
+          padding: EdgeInsets.all(16),
+          child: Text("Funny Time 需要一个有趣的图标，欢迎提交你的想法！\nHttps://github.com/dengsgo/funny_time/issues",
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Colors.redAccent, fontWeight: FontWeight.bold),),
+        ),
+        SizedBox(height: 24,),
+      ],
     );
   }
 
