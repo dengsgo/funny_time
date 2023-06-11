@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:battery_plus/battery_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:funny_time/icons.dart';
@@ -62,6 +63,7 @@ class SettingConfigure {
     this.fontFamily = NumberFontFamily.jetBrainsMono,
     this.sharedScreenSize,
     this.textColorsPaintIndex = 3,
+    this.batteryLevel = 100,
     double appScreenBrightnessValue = -1,
     this.weatherInfo = const WeatherInfo(0, Temperature(0, 0, 0), Weather('', '', 0, '')),
 }) : _appScreenBrightnessValue = appScreenBrightnessValue,
@@ -100,6 +102,7 @@ class SettingConfigure {
   // plugins
   late SharedPreferences localStore;
   double _appScreenBrightnessValue;
+  int batteryLevel;
 
   // 保存亮度值，并尝试设置app亮度
   set appScreenBrightnessValue (v) {
@@ -137,6 +140,7 @@ class SettingManager {
     // 获取系统亮度
     if (!kIsWeb) {
       globalSetting.appScreenBrightnessValue = await currentBrightness;
+      globalSetting.batteryLevel = await getBatteryLevel();
     }
     // Obtain shared preferences.
     localStore = await SharedPreferences.getInstance();
@@ -184,6 +188,7 @@ class SettingManager {
   static void _autoJob() {
     Timer.periodic(const Duration(minutes: 1), (timer) async {
       _autoBrightness();
+      globalSetting.batteryLevel = await getBatteryLevel(); // 一分钟更新一次电池电量，有延迟也什么问题
     });
   }
 
@@ -261,6 +266,16 @@ void wakeLockDisable() {
   }
 }
 
+// battery
+Future<int> getBatteryLevel() async {
+  try {
+    return await Battery().batteryLevel;
+  } catch (e) {
+    print("getBatteryLevel fail $e");
+  }
+  return 100;
+}
+
 // weather icons
 
 // global
@@ -325,6 +340,20 @@ const Map<String, IconData> weatherIconDataMap = {
   "11n": WeatherIcons.thunderstorm,
   "13n": WeatherIcons.snow,
   "50n": WeatherIcons.fog,
+};
+
+const Map<int, IconData> batteryIconMap = {
+  0: Icons.battery_alert,
+  1: Icons.battery_alert,
+  2: Icons.battery_2_bar,
+  3: Icons.battery_3_bar,
+  4: Icons.battery_4_bar,
+  5: Icons.battery_5_bar,
+  6: Icons.battery_6_bar,
+  7: Icons.battery_6_bar,
+  8: Icons.battery_6_bar,
+  9: Icons.battery_6_bar,
+  10: Icons.battery_full,
 };
 
 // 渐变颜色表

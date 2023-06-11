@@ -221,13 +221,21 @@ class _WeatherViewState extends State<WeatherView> {
         )
     );
     if (widget.weatherStyle > 1) {
+      final small = Theme.of(context).textTheme.bodySmall;
       return IntrinsicWidth(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             body,
-            const Divider(color: Colors.white70, indent: 8, endIndent: 8),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Flexible(child: const Divider(color: Colors.white70, indent: 8, endIndent: 8)),
+                Icon(batteryIconMap[globalSetting.batteryLevel/10], size: 12 * globalSetting.timeFontSizeScale,),
+                Text("${globalSetting.batteryLevel}%", style: small?.copyWith(fontSize: small!.fontSize! * globalSetting.timeFontSizeScale),),
+              ],
+            ),
             ..._styleTimeWidgets()
           ],
         ),
