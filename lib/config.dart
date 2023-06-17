@@ -64,6 +64,7 @@ class SettingConfigure {
     this.sharedScreenSize,
     this.textColorsPaintIndex = 3,
     this.batteryLevel = 100,
+    this.batteryState = BatteryState.unknown,
     double appScreenBrightnessValue = -1,
     this.weatherInfo = const WeatherInfo(0, Temperature(0, 0, 0), Weather('', '', 0, '')),
 }) : _appScreenBrightnessValue = appScreenBrightnessValue,
@@ -103,6 +104,8 @@ class SettingConfigure {
   late SharedPreferences localStore;
   double _appScreenBrightnessValue;
   int batteryLevel;
+  BatteryState batteryState;
+  late Battery battery;
 
   // 保存亮度值，并尝试设置app亮度
   set appScreenBrightnessValue (v) {
@@ -115,6 +118,14 @@ class SettingConfigure {
 
   // 获取亮度值
   get appScreenBrightnessValue => _appScreenBrightnessValue;
+
+  // 获取电池图标
+  IconData get batteryIconData {
+    if (globalSetting.batteryState == BatteryState.charging) {
+      return Icons.battery_charging_full_outlined;
+    }
+    return batteryIconMap[globalSetting.batteryLevel/10] ?? Icons.battery_unknown_outlined;
+  }
 
   Paint? timeTextPaint(int index) {
     if (globalSetting.textColorsPaintIndex == 0
@@ -140,7 +151,7 @@ class SettingManager {
     // 获取系统亮度
     if (!kIsWeb) {
       globalSetting.appScreenBrightnessValue = await currentBrightness;
-      globalSetting.batteryLevel = await getBatteryLevel();
+      _batteryListener();
     }
     // Obtain shared preferences.
     localStore = await SharedPreferences.getInstance();
@@ -158,6 +169,19 @@ class SettingManager {
 
     _autoBrightness();
     _autoJob();
+  }
+
+  static _batteryListener() async {
+    globalSetting.battery = Battery(); // init
+    try {
+      globalSetting.batteryLevel = await globalSetting.battery.batteryLevel;
+      globalSetting.battery.onBatteryStateChanged.listen((BatteryState state) {
+        if (state != globalSetting.batteryState)
+          globalSetting.batteryState = state;
+      });
+    } catch (e) {
+      print("_batteryListener fail $e");
+    }
   }
 
   // 刷新天气信息
@@ -188,7 +212,7 @@ class SettingManager {
   static void _autoJob() {
     Timer.periodic(const Duration(minutes: 1), (timer) async {
       _autoBrightness();
-      globalSetting.batteryLevel = await getBatteryLevel(); // 一分钟更新一次电池电量，有延迟也什么问题
+      globalSetting.batteryLevel = await globalSetting.battery.batteryLevel; // 一分钟更新一次电池电量，有延迟也什么问题
     });
   }
 
@@ -343,16 +367,16 @@ const Map<String, IconData> weatherIconDataMap = {
 };
 
 const Map<int, IconData> batteryIconMap = {
-  0: Icons.battery_alert,
-  1: Icons.battery_alert,
-  2: Icons.battery_2_bar,
-  3: Icons.battery_3_bar,
-  4: Icons.battery_4_bar,
-  5: Icons.battery_5_bar,
-  6: Icons.battery_6_bar,
-  7: Icons.battery_6_bar,
-  8: Icons.battery_6_bar,
-  9: Icons.battery_6_bar,
+  0: Icons.battery_alert_outlined,
+  1: Icons.battery_alert_outlined,
+  2: Icons.battery_2_bar_outlined,
+  3: Icons.battery_3_bar_outlined,
+  4: Icons.battery_4_bar_outlined,
+  5: Icons.battery_5_bar_outlined,
+  6: Icons.battery_6_bar_outlined,
+  7: Icons.battery_6_bar_outlined,
+  8: Icons.battery_6_bar_outlined,
+  9: Icons.battery_6_bar_outlined,
   10: Icons.battery_full,
 };
 

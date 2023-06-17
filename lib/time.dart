@@ -232,7 +232,7 @@ class _WeatherViewState extends State<WeatherView> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Flexible(child: const Divider(color: Colors.white70, indent: 8, endIndent: 8)),
-                Icon(batteryIconMap[globalSetting.batteryLevel/10], size: 12 * globalSetting.timeFontSizeScale,),
+                Icon(globalSetting.batteryIconData, size: 12 * globalSetting.timeFontSizeScale,),
                 Text("${globalSetting.batteryLevel}%", style: small?.copyWith(fontSize: small!.fontSize! * globalSetting.timeFontSizeScale),),
               ],
             ),
