@@ -13,6 +13,8 @@ import 'package:screen_brightness/screen_brightness.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wakelock/wakelock.dart';
 
+const appVersionCode = '1.0.2';
+
 const double positionPaddingHeight = 72;
 
 final SettingConfigure globalSetting = SettingConfigure();

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:funny_time/config.dart';
 
+const _projectCodeUrl = 'https://github.com/dengsgo/funny_time';
+
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
 
@@ -33,15 +35,15 @@ class _SettingPageState extends State<SettingPage> {
   Widget build(BuildContext context) {
     final styleLarge = Theme.of(context).textTheme.titleLarge;
     return Scaffold(
-      appBar: AppBar(title: Text("Setting"),),
+      appBar: AppBar(title: const Text("Setting"),),
       body: ListView(
         children: [
           _copyright(),
           ListTile(title: Text("天气", style: styleLarge,),),
           ListTile(
-            title: Text("城市/地区"),
+            title: const Text("城市/地区"),
             subtitle: globalSetting.weatherSet.city == null ? null : Text(globalSetting.weatherSet.city!),
-            trailing: Icon(Icons.chevron_right),
+            trailing: const Icon(Icons.chevron_right),
             onTap: () async {
               String? text = await Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => _TextSettingPage(appbarTitle: "City, 如 Shanghai", text: globalSetting.weatherSet.city,),
@@ -55,9 +57,9 @@ class _SettingPageState extends State<SettingPage> {
             },
           ),
           ListTile(
-            title: Text("接口Key (OpenWeather Apikey)"),
+            title: const Text("接口Key (OpenWeather Apikey)"),
             subtitle: globalSetting.weatherSet.apikey == null ? null : Text(globalSetting.weatherSet.apikey!),
-            trailing: Icon(Icons.chevron_right),
+            trailing: const Icon(Icons.chevron_right),
             onTap: () async {
               String? text = await Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => _TextSettingPage(appbarTitle: "Apikey", text: globalSetting.weatherSet.apikey,),
@@ -71,13 +73,13 @@ class _SettingPageState extends State<SettingPage> {
             },
           ),
           ListTile(
-            title: Text("强制更新天气"),
+            title: const Text("强制更新天气"),
             subtitle: Text("自打开App已请求接口 ${globalSetting.weatherActiveFlushApiCount} 次"),
             onTap: () async {
               _initData();
             },
           ),
-          Divider(),
+          const Divider(),
           ListTile(title: Text("自动化", style: styleLarge,),),
           ListTile(
             title: Text("低亮度 (${globalSetting.autoSet.lowBrightnessValue})"),
@@ -98,7 +100,7 @@ class _SettingPageState extends State<SettingPage> {
             ),
           ),
           ListTile(
-            title: Text("低亮度时间段"),
+            title: const Text("低亮度时间段"),
             subtitle: Column(
               mainAxisSize: MainAxisSize.min,
               children:_timeSlots(),
@@ -126,21 +128,21 @@ class _SettingPageState extends State<SettingPage> {
             ),
           ),
 
-          Divider(),
+          const Divider(),
           ListTile(title: Text("开源代码", style: styleLarge,),),
-          ListTile(
+          const ListTile(
             title: Text("Project"),
-            subtitle: Text("https://github.com/dengsgo/funny_time"),
+            subtitle: Text(_projectCodeUrl),
           ),
-          ListTile(
+          const ListTile(
             title: Text("MIT License"),
-            subtitle: Text("https://github.com/dengsgo/funny_time/blob/master/LICENSE"),
+            subtitle: Text("$_projectCodeUrl/blob/master/LICENSE"),
           ),
-          ListTile(
+          const ListTile(
             title: Text("贡献代码"),
-            subtitle: Text("https://github.com/dengsgo/funny_time/fock"),
+            subtitle: Text("$_projectCodeUrl/fock"),
           ),
-          ListTile(
+          const ListTile(
             title: Text("捐赠开发者"),
             subtitle: Text("感谢你的支持，以维持开源软件的更新！"),
           ),
@@ -160,7 +162,7 @@ class _SettingPageState extends State<SettingPage> {
               ),
             ],
           ),
-          Padding(padding: EdgeInsets.all(48), child: Text("到底部啦", style: styleLarge?.copyWith(color: Colors.white24), textAlign: TextAlign.center,),)
+          Padding(padding: const EdgeInsets.all(48), child: Text("到底部啦", style: styleLarge?.copyWith(color: Colors.white24), textAlign: TextAlign.center,),)
         ],
       ),
     );
@@ -174,8 +176,8 @@ class _SettingPageState extends State<SettingPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            FlutterLogo(size: 82,),
-            SizedBox(
+            const FlutterLogo(size: 82,),
+            const SizedBox(
               width: 12,
             ),
             Column(
@@ -183,19 +185,19 @@ class _SettingPageState extends State<SettingPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text("Funny Time", style: Theme.of(context).textTheme.headlineSmall,),
-                Text("版本: 1.0.1"),
+                const Text("版本: ${appVersionCode}"),
                 Text("A Cool Time Open-Source Display App !"),
               ],
             ),
           ],
         ),
         Padding(
-          padding: EdgeInsets.all(16),
-          child: Text("Funny Time 需要一个有趣的图标，欢迎提交你的想法！\nHttps://github.com/dengsgo/funny_time/issues",
+          padding: const EdgeInsets.all(16),
+          child: Text("Funny Time 需要一个有趣的图标，欢迎提交你的想法！\n$_projectCodeUrl/issues",
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Colors.redAccent, fontWeight: FontWeight.bold),),
         ),
-        SizedBox(height: 24,),
+        const SizedBox(height: 24,),
       ],
     );
   }
@@ -278,6 +280,7 @@ class _TextSettingPageState extends State<_TextSettingPage> {
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: 12),
         children: [
+          const SizedBox(height: 16,),
           TextField(
             controller: _controller,
             onChanged: (value) {
