@@ -127,7 +127,7 @@ class _SettingPageState extends State<SettingPage> {
           ),
 
           Divider(),
-          ListTile(title: Text("开源公示", style: styleLarge,),),
+          ListTile(title: Text("开源代码", style: styleLarge,),),
           ListTile(
             title: Text("Project"),
             subtitle: Text("https://github.com/dengsgo/funny_time"),
