@@ -126,7 +126,7 @@ class SettingConfigure {
     if (globalSetting.batteryState == BatteryState.charging) {
       return Icons.battery_charging_full_outlined;
     }
-    return batteryIconMap[globalSetting.batteryLevel/10] ?? Icons.battery_unknown_outlined;
+    return batteryIconMap[globalSetting.batteryLevel~/10] ?? Icons.battery_unknown_outlined;
   }
 
   Paint? timeTextPaint(int index) {
