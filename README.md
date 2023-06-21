@@ -22,7 +22,9 @@ Developed using Flutter technology, theoretically supporting all platforms (Web,
 
 ## Download  
 
-[Android Apk](releases) | [iOS Ipa(请自行编译)](#build) | 其他平台未测试，可自行编译
+[Android Apk](https://github.com/dengsgo/funny_time/releases) |
+[Android Apk (Gitee源)](https://gitee.com/dengsgo/funny_time/releases) |
+[iOS Ipa(请自行编译)](#build) | 其他平台未测试，可自行编译
 
 ## Usage 
 
