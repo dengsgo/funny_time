@@ -20,6 +20,9 @@ Developed using Flutter technology, theoretically supporting all platforms (Web,
 - 代办事项提醒、代办小部件 （TODO）  
 - 时间倒计时 （TODO）  
 
+## Download  
+
+[Android Apk](releases) | [iOS Ipa(请自行编译)](#build) | 其他平台未测试，可自行编译
 
 ## Usage 
 
