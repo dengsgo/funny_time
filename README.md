@@ -15,8 +15,7 @@ Developed using Flutter technology, theoretically supporting all platforms (Web,
 - 支持显示天气、气温，适配多种部件样式  
 - AOD 常亮显示，全黑背景，内建防“烧屏”机制，对 OLED 屏幕友好  
 - 低功耗优化，适合老旧机型全天候使用  
-- 十档亮度调节  
-- 自定义时段自动调整亮度（TODO）  
+- 亮度调节和自定义时段低亮度  
 - 代办事项提醒、代办小部件 （TODO）  
 - 时间倒计时 （TODO）  
 
