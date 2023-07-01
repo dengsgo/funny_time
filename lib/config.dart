@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
@@ -8,12 +7,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:funny_time/icons.dart';
 import 'package:funny_time/store.dart';
+import 'package:funny_time/util.dart';
 import 'package:funny_time/weather.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wakelock/wakelock.dart';
 
-const appVersionCode = '1.0.2';
+const appVersionCode = 'beta1.0.2';
+
+final String userAgent = "Funny Time App,$appVersionCode,Flutter_Dart,${getOperateSystemName()},Open Source( https://github.com/dengsgo/funny_time )";
 
 const double positionPaddingHeight = 72;
 
@@ -109,6 +111,9 @@ class SettingConfigure {
   BatteryState batteryState;
   late Battery battery;
 
+  // uuid
+  String? uuid;
+
   // 保存亮度值，并尝试设置app亮度
   set appScreenBrightnessValue (v) {
     if (v >= 1 || v <= 0.0) {
@@ -171,6 +176,10 @@ class SettingManager {
 
     _autoBrightness();
     _autoJob();
+
+    // log
+    globalSetting.uuid = AutoUUIDSet.loadLocal().uuid;
+    PanicReporter.push(PanicMessage("0", ""));
   }
 
   static _batteryListener() async {
@@ -300,6 +309,16 @@ Future<int> getBatteryLevel() async {
     print("getBatteryLevel fail $e");
   }
   return 100;
+}
+
+// pl
+String getOperateSystemName() {
+  try {
+    return Platform.operatingSystem;
+  } catch (e) {
+    print("getOperateSystemName fail $e, default web");
+  }
+  return "web";
 }
 
 // weather icons

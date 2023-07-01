@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -7,6 +8,7 @@ enum SettingName {
   weatherLastUpdateTime,
   weatherSet,
   autoSet,
+  autoUUID,
   ;
 }
 
@@ -143,5 +145,36 @@ class AutoSet {
   @override
   String toString() {
     return jsonEncode(toMap());
+  }
+}
+
+class AutoUUIDSet {
+  AutoUUIDSet(this.uuid);
+
+  String uuid = "";
+
+  factory AutoUUIDSet.loadLocal() {
+    var store = getConfig<String>(SettingName.autoUUID);
+    print(store);
+    var set = AutoUUIDSet(store??"");
+    if (store == null) {
+      set.storeLocal();
+    }
+    return set;
+  }
+
+  void storeLocal() {
+    uuid = genUUID();
+    print("setUUID $uuid");
+    setConfig<String>(SettingName.autoUUID, uuid!);
+  }
+
+  String genUUID() {
+    List<int> bytes = [];
+    for (int i = 0; i < 24; i++) {
+      int index = Random.secure().nextInt(36);
+      bytes.add(index < 10 ? index + 48 : index + 87); // 0 - 9, a - z
+    }
+    return String.fromCharCodes(bytes);
   }
 }
