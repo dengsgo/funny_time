@@ -2,11 +2,11 @@
 
 一个全屏显示的时间软件，类似于 always on display (AOD, 持久显示) 的效果。  
 非常适合 OLED、Amoled 屏幕常亮使用。  
-使用 Flutter 技术开发，理论上支持全平台(Web、Android、iOS等)，Web、iOS 已测试。  
+使用 Flutter 技术开发，理论上支持全平台(Web、Android、iOS等)。  
 
 A full-screen time display software, similar to the effect of always on display (AOD).  
 It is especially suitable for OLED and Amoled screens to be always on.  
-Developed using Flutter technology, theoretically supporting all platforms (Web, Android, iOS, etc.), and Web and iOS have been tested.  
+Developed using Flutter technology, theoretically supporting all platforms (Web, Android, iOS, etc.).  
 
 ## Feature   
 
@@ -15,9 +15,7 @@ Developed using Flutter technology, theoretically supporting all platforms (Web,
 - 支持显示天气、气温，适配多种部件样式  
 - AOD 常亮显示，全黑背景，内建防“烧屏”机制，对 OLED 屏幕友好  
 - 低功耗优化，适合老旧机型全天候使用  
-- 亮度调节和自定义时段低亮度  
-- 代办事项提醒、代办小部件 （TODO）  
-- 时间倒计时 （TODO）  
+- 亮度调节和自定义时段低亮度
 
 ## Download  
 
