@@ -13,7 +13,7 @@ import 'package:screen_brightness/screen_brightness.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wakelock/wakelock.dart';
 
-const appVersionCode = 'beta1.0.2';
+const appVersionCode = 'beta1.1.0';
 
 final String userAgent = "Funny Time App,$appVersionCode,Flutter_Dart,${getOperateSystemName()},Open Source( https://github.com/dengsgo/funny_time )";
 
